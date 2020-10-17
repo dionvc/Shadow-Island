@@ -12,6 +12,7 @@ public class Generator : MonoBehaviour
     [SerializeField] RuleTile cliffTile;
     [SerializeField] Tile tallGrass;
     [SerializeField] Tilemap tallGrassMap;
+    float seed = 0;
     int sizeX = 12;
     int sizeY = 12;
 
@@ -19,6 +20,7 @@ public class Generator : MonoBehaviour
 
     void Start()
     {
+        seed = Random.value;
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
@@ -71,10 +73,8 @@ public class Generator : MonoBehaviour
         {
             for (int j = 0; j < 32; j++)
             {
-                float perlin = Mathf.Clamp(
-                    Mathf.PerlinNoise((x * 32.0f + i) / (8.0f), (y * 32.0f + j) / (8.0f))
-                    , 0, 0.99f);
-                perlin = Mathf.Pow(perlin, 0.5f);
+                float perlin = SamplePerlin(x * 32 + i, y * 32 + j);
+                perlin = Mathf.Pow(perlin, 0.75f);
                 int num = (int)((maps.Length) * perlin);
                 maps[num].SetTile(new Vector3Int(x * 32 + i, y * 32 + j, 0), tiles[num]);
             }
@@ -142,9 +142,7 @@ public class Generator : MonoBehaviour
             {
                 for (int j = 0; j < 32; j++)
                 {
-                    float perlin = Mathf.Clamp(
-                        Mathf.PerlinNoise((x * 32.0f + i) / (8.0f), (y * 32.0f + j) / (8.0f))
-                        , 0, 0.99f);
+                    float perlin = SamplePerlin(x * 32 + i, y * 32 + j);
                     int num = (int)((maps.Length) * perlin *
                         (
                         Mathf.Clamp(
@@ -258,7 +256,7 @@ public class Generator : MonoBehaviour
                 locations[7] = new Vector3Int(i + 1, j, 0);
                 locations[8] = new Vector3Int(i + 1, j + 1, 0);
 
-                if (!cliffMap.HasTile(locations[4]) && GetNeighborsCount(maps[3], locations) == 9)
+                if (!cliffMap.HasTile(locations[4]) && GetNeighborsCount(maps[3], locations) == 9 && !maps[4].HasTile(locations[4]))
                 {
                     tallGrassMap.SetTile(locations[4], tallGrass);
                 }
@@ -296,5 +294,10 @@ public class Generator : MonoBehaviour
             }
         }
         return neighbors;
+    }
+
+    public float SamplePerlin(int x, int y)
+    {
+        return Mathf.Clamp(0.33f * Mathf.PerlinNoise((x/4.0f) + seed, (y/4.0f) + seed) + 0.67f * Mathf.PerlinNoise((x/8.0f) + seed, (y/8.0f) + seed), 0, 0.99f);
     }
 }
