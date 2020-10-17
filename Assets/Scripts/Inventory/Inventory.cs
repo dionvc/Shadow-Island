@@ -16,15 +16,11 @@ public class Inventory : MonoBehaviour
     {
         possibleRecipes = new List<KeyValuePair<Recipe, int>>();
         inventory = new List<ItemStack>(size);
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             inventory.Add(null);
         }
         inventoryReadOnly = inventory.AsReadOnly();
-        Definitions definitions = Definitions.Instance;
-        Item item = null;
-        definitions.ItemDictionary.TryGetValue(0, out item);
-        inventory[0] = new ItemStack(item, 5);
     }
 
     public virtual void TransferMouse(Inventory mouse, int slotID)
@@ -241,7 +237,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     /// <param name="itemStack"></param>
     /// <returns>Remainder if cannot be inserted</returns>
-    public ItemStack InsertStack(ItemStack itemStack)
+    public virtual ItemStack InsertStack(ItemStack itemStack)
     {
         inventoryHasChanged = true;
         for(int i = 0; i < inventory.Count; i++)

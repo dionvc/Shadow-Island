@@ -78,6 +78,10 @@ public class MachineUI : MonoBehaviour
             {
                 progressBar.fillAmount = craftingManagerRecipe.recipeProgress * 1.0f / craftingManagerRecipe.GetRecipe().craftingTime;
             }
+            else
+            {
+                progressBar.fillAmount = 0;
+            }
         }
 
         if(inventoryFixed != null)
@@ -116,9 +120,13 @@ public class MachineUI : MonoBehaviour
                 UpdateSlot(inventoryFixed.outputInvReadOnly[outputInventory.Count - 1], currentSlot, inventoryFixed.inputInvReadOnly.Count + outputInventory.Count - 1);
                 currentSlot.GetComponent<Button>().onClick.AddListener(delegate { OnClickInventorySlot(currentSlot); });
             }
-            if (craftingManagerFixed != null)
+            if (craftingManagerFixed.GetRemainingTime() != 0)
             {
-                progressBar.fillAmount = craftingManagerFixed.recipeProgress * 1.0f / craftingManagerFixed.GetRecipe().craftingTime;
+                progressBar.fillAmount = craftingManagerFixed.recipeProgress * 1.0f / craftingManagerFixed.GetRemainingTime();
+            }
+            else
+            {
+                progressBar.fillAmount = 0;
             }
         }
     }

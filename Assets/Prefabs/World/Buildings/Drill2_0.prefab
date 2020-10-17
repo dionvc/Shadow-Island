@@ -12,6 +12,10 @@ GameObject:
   - component: {fileID: 497351569967024541}
   - component: {fileID: 497351569967024542}
   - component: {fileID: 497351569967024483}
+  - component: {fileID: 580369428163994838}
+  - component: {fileID: 6094978178305601065}
+  - component: {fileID: 2941984759253927637}
+  - component: {fileID: 7219257429022070315}
   m_Layer: 0
   m_Name: Drill2_0
   m_TagString: Untagged
@@ -130,3 +134,60 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &580369428163994838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497351569967024543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b78f86108f1a540b25f85e81c971a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 0
+  inputSize: 0
+  outputSize: 1
+--- !u!114 &6094978178305601065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497351569967024543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 494657f9da90c8241bd07df42231e785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2941984759253927637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497351569967024543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860ab6e325ea49b43bfcd585015eabc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  miningTag: ore
+--- !u!114 &7219257429022070315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 497351569967024543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7271eec1865c644a0690a99449a147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemIDresult: 5
+  amountOnMine: 1
+  totalAmount: 1
+  miningTime: 250
+  miningtag: 

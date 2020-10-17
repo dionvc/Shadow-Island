@@ -4,35 +4,35 @@ using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
 {
-    [SerializeField] WarehouseManager warehouse;
-    int resourceCount = 0;
-    int productionTime = 60;
-    int counter = 0;
-    int callGatherer = 10;
-    int maxResource = 20;
+    [SerializeField] string miningTag = null;
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    public bool CheckPlacement(Collider2D[] collisionList, out Mineable mineable)
     {
-        counter++;
-        if(counter >= productionTime)
+        mineable = null;
+        if(collisionList.Length == 1)
         {
-            counter = 0;
-            resourceCount++;
-            if(resourceCount >= callGatherer)
+            if(collisionList[0].gameObject.TryGetComponent(out mineable))
             {
-                warehouse.RequestGatherer(this);
+                if(mineable.miningtag == miningTag)
+                {
+                    return true;
+                }
+                else
+                {
+                    mineable = null;
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
-    }
-
-    public void GatherResource()
-    {
-        resourceCount = 0;
+        return false;
     }
 }

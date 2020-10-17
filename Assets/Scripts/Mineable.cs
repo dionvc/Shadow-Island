@@ -8,6 +8,7 @@ public class Mineable : MonoBehaviour
     [SerializeField] int amountOnMine;
     [SerializeField] int totalAmount;
     [SerializeField] public int miningTime;
+    [SerializeField] public string miningtag = null;
 
     public void OnMine(Inventory inventory)
     {

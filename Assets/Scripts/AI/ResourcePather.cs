@@ -45,7 +45,6 @@ public class ResourcePather : MonoBehaviour
             move = buildingManager.transform.position - this.transform.position;
             if (move.magnitude < satisfactionRadius)
             {
-                buildingManager.GatherResource();
                 gatheringState = GatheringState.Gathering;
             }
             else

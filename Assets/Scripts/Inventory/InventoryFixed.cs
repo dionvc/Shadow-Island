@@ -46,4 +46,26 @@ public class InventoryFixed : Inventory
     {
         return false;
     }
+
+    public override ItemStack InsertStack(ItemStack itemStack)
+    {
+        for(int i = 0; i < outputInventory.Count; i++)
+        {
+            if(outputInventory[i] != null && outputInventory[i].item.id == itemStack.item.id)
+            {
+                outputInventory[i].size += itemStack.size;
+                itemStack.size = outputInventory[i].size - outputInventory[i].item.maxStack;
+                if(itemStack.size <= 0)
+                {
+                    return null;
+                }
+            }
+            else if(outputInventory[i] == null)
+            {
+                outputInventory[i] = itemStack;
+                return null;
+            }
+        }
+        return itemStack;
+    }
 }

@@ -28,6 +28,13 @@ public class ObjectInteraction : MonoBehaviour
         filter.useLayerMask = true;
         filter.layerMask = layerMask;
         playerInventory = GetComponent<Inventory>();
+
+        //Debug code
+        Definitions definitions = Definitions.Instance;
+        for (int i = 0; i < definitions.ItemDefinitions.Count && i < playerInventory.inventoryReadOnly.Count; i++)
+        {
+            playerInventory.InsertAt(i, new ItemStack(definitions.ItemDefinitions[i], 5));
+        }
     }
 
     // Update is called once per frame
@@ -61,8 +68,18 @@ public class ObjectInteraction : MonoBehaviour
                 placeSprite.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.25f);
                 if (Input.GetMouseButton(0))
                 {
-                    
-                    if (Physics2D.OverlapBoxAll(placeVector - offset, size / 2.0f, 0.0f).Length == 0)
+                    Collider2D[] colliders = Physics2D.OverlapBoxAll(placeVector - offset, size / 2.0f, 0.0f);
+                    BuildingManager buildingManager;
+                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
+                    {
+                        Mineable mineable;
+                        if(buildingManager.CheckPlacement(colliders, out mineable))
+                        {
+                            GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                            building.GetComponent<CraftingManagerFixed>().SetMineable(mineable);
+                        }
+                    }
+                    else if (colliders.Length == 0)
                     {
                         Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
                     }
