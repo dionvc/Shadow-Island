@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1688277692788967132
+--- !u!1 &1670173419591848230
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,38 +8,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1688277692788967107}
-  - component: {fileID: 1688277692788967106}
-  - component: {fileID: 1688277692788967133}
-  - component: {fileID: 2345440936547767643}
+  - component: {fileID: 1670173419591848227}
+  - component: {fileID: 1670173419591848224}
+  - component: {fileID: 1670173419591848225}
+  - component: {fileID: 1670173419591848226}
   m_Layer: 0
-  m_Name: PineTreeDead
+  m_Name: RockDeposit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1688277692788967107
+--- !u!4 &1670173419591848227
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688277692788967132}
+  m_GameObject: {fileID: 1670173419591848230}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 168.15425, y: 169.5208, z: 0}
+  m_LocalPosition: {x: 170, y: 160, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1688277692788967106
+--- !u!212 &1670173419591848224
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688277692788967132}
+  m_GameObject: {fileID: 1670173419591848230}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -73,57 +73,57 @@ SpriteRenderer:
   m_SortingLayerID: 861379423
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 07a7f0f8a1954a94886f6816dadd0d51, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5abc8db62131815478ed514b82ccc148, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 3}
+  m_Size: {x: 2, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 1
---- !u!61 &1688277692788967133
+  m_SpriteSortPoint: 0
+--- !u!114 &1670173419591848225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1670173419591848230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba7271eec1865c644a0690a99449a147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemIDresult: 0
+  amountOnMine: 1
+  totalAmount: 1000
+  miningTime: 200
+  miningtag: ore
+--- !u!61 &1670173419591848226
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688277692788967132}
+  m_GameObject: {fileID: 1670173419591848230}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.5}
+  m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.25}
-    oldSize: {x: 2, y: 3}
-    newSize: {x: 2, y: 3}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 2, y: 1}
+    newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.5}
+  m_Size: {x: 2, y: 1}
   m_EdgeRadius: 0
---- !u!114 &2345440936547767643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688277692788967132}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba7271eec1865c644a0690a99449a147, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemIDresult: 1
-  amountOnMine: 10
-  totalAmount: 10
-  miningTime: 250
-  miningtag: 

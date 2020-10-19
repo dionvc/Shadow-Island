@@ -5,8 +5,32 @@ using UnityEngine.Tilemaps;
 
 public class Pathing : MonoBehaviour
 {
+    #region Singleton
+    private static Pathing instance;
+    public static Pathing Instance
+    {
+        get
+        {
+            if (instance == null) Debug.LogError("No Instance of Pathing in the Scene!");
+            return instance;
+        }
+    }
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Debug.LogError("Just one Instance of Definitions allowed!");
+        }
+    }
+    #endregion
+
+    bool[][] isNotPathable;
+
     [SerializeField] Grid tileGrid;
-    [SerializeField] Tilemap[] unwalkableMaps;
     public PathNode GetPath(Vector3 start, Vector3 target, int pathTimeout)
     {
         Vector3Int startCoords = tileGrid.WorldToCell(start);
@@ -72,11 +96,9 @@ public class Pathing : MonoBehaviour
                     if (!ignore) //if neither of the preceding conditions set ignore to false, add tile to open list on path search
                     {
                         bool walkable = true;
-                        for(int k = 0; k < unwalkableMaps.Length; k++)
+                        if (!IsLocationPathable(i, j))
                         {
-                            if(unwalkableMaps[k].HasTile(new Vector3Int(i,j, 0))) {
-                                walkable = false;
-                            }
+                            walkable = false;
                         }
                         if (walkable == true)
                         {
@@ -94,5 +116,39 @@ public class Pathing : MonoBehaviour
     private float CalculateHeuristic(Vector3 start, Vector3 target)
     {
         return (float)(start.x - target.x) * (start.x - target.x) + (start.y - target.y) * (start.y - target.y);
+    }
+
+
+    public void InitializePathingGrid(int sizeX, int sizeY)
+    {
+        isNotPathable = new bool[sizeX][];
+        for(int i = 0; i < sizeX; i++)
+        {
+            isNotPathable[i] = new bool[sizeY];
+        }
+    }
+    /// <summary>
+    /// Sets a square to show as unavailable for pathing
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetUnpathableLocation(int x, int y)
+    {
+        isNotPathable[x][y] = true;
+    }
+
+    /// <summary>
+    /// Sets a location to be available for pathing
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetPathableLocation(int x, int y)
+    {
+        isNotPathable[x][y] = false;
+    }
+
+    public bool IsLocationPathable(int x, int y)
+    {
+        return !isNotPathable[x][y];
     }
 }

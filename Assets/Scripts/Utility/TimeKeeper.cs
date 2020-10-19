@@ -28,7 +28,7 @@ public class TimeKeeper : MonoBehaviour
         globalLight.color = ambientGradient.Evaluate(time * 1.0f / timeMax);
         if (time > timeMax / 5.0f && time < timeMax * 4.0f / 5.0f)
         {
-            globalLight.transform.eulerAngles = new Vector3(30, -50.0f + 100.0f * (time * 1.0f / timeMax), 0);
+            globalLight.transform.eulerAngles = new Vector3(30, -50.0f + 100.0f * (((time - timeMax/5.0f) * (1.25f) / timeMax)), 0);
         }
         else if(time < timeMax / 5.0f)
         {

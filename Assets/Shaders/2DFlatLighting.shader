@@ -6,6 +6,7 @@ Shader "2DFlatLighting"
 	{
 		_MainTex("_MainTex", 2D) = "white" {}
 		_NormalMap("_NormalMap", 2D) = "bump" {}
+		_NormalScale("NormalScale", Range( 0 , 1)) = 0
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 		[HideInInspector] __dirty( "", Int ) = 1
 	}
@@ -18,6 +19,7 @@ Shader "2DFlatLighting"
 		CGINCLUDE
 		#include "UnityPBSLighting.cginc"
 		#include "UnityShaderVariables.cginc"
+		#include "UnityStandardUtils.cginc"
 		#include "Lighting.cginc"
 		#pragma target 3.0
 		struct Input
@@ -41,6 +43,7 @@ Shader "2DFlatLighting"
 
 		uniform sampler2D _MainTex;
 		uniform float4 _MainTex_ST;
+		uniform float _NormalScale;
 		uniform sampler2D _NormalMap;
 		uniform float4 _NormalMap_ST;
 
@@ -75,7 +78,7 @@ Shader "2DFlatLighting"
 			else if( _WorldSpaceLightPos0.w == 0.0 )
 				ifLocalVar59 = float4( ( _WorldSpaceLightPos0.xyz * float3( 1,-1,-1 ) ) , 0.0 );
 			float2 uv_NormalMap = i.uv_texcoord * _NormalMap_ST.xy + _NormalMap_ST.zw;
-			float dotResult9 = dot( ifLocalVar59 , float4( UnpackNormal( tex2D( _NormalMap, uv_NormalMap ) ) , 0.0 ) );
+			float dotResult9 = dot( ifLocalVar59 , float4( UnpackScaleNormal( tex2D( _NormalMap, uv_NormalMap ), _NormalScale ) , 0.0 ) );
 			#if defined(LIGHTMAP_ON) && ( UNITY_VERSION < 560 || ( defined(LIGHTMAP_SHADOW_MIXING) && !defined(SHADOWS_SHADOWMASK) && defined(SHADOWS_SCREEN) ) )//aselc
 			float4 ase_lightColor = 0;
 			#else //aselc
@@ -180,7 +183,7 @@ Shader "2DFlatLighting"
 }
 /*ASEBEGIN
 Version=18100
-7;7;1352;700;2664.594;966.9476;3.885837;True;True
+7;7;1352;700;2440.97;122.3734;1.44677;True;True
 Node;AmplifyShaderEditor.WorldSpaceLightPos;44;-2287.53,45.08457;Inherit;False;0;3;FLOAT4;0;FLOAT3;1;FLOAT;2
 Node;AmplifyShaderEditor.RangedFloatNode;65;-1911.734,-77.70469;Inherit;False;Constant;_Float0;Float 0;2;0;Create;True;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.BreakToComponentsNode;63;-2106.87,-251.612;Inherit;False;FLOAT3;1;0;FLOAT3;0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
@@ -189,8 +192,9 @@ Node;AmplifyShaderEditor.DynamicAppendNode;64;-1506.509,-312.0579;Inherit;False;
 Node;AmplifyShaderEditor.WorldPosInputsNode;61;-2243.246,-457.2763;Inherit;True;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;60;-1375.299,-485.8134;Inherit;True;2;0;FLOAT4;0,0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;72;-1112.045,-475.2844;Inherit;True;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT4;1,-1,1,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.NormalizeNode;73;-874.675,-425.1064;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;58;-1411.63,27.93579;Inherit;True;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;1,-1,-1;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.NormalizeNode;73;-874.675,-425.1064;Inherit;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RangedFloatNode;76;-1928.813,425.9526;Inherit;False;Property;_NormalScale;NormalScale;2;0;Create;True;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.ConditionalIfNode;59;-890.1941,-189.4568;Inherit;False;False;5;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SamplerNode;5;-1603.166,317.1833;Inherit;True;Property;_NormalMap;_NormalMap;1;0;Create;True;0;0;False;0;False;-1;None;None;True;0;False;bump;Auto;True;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.DotProductOpNode;9;-645.0731,-60.36194;Inherit;True;2;0;FLOAT4;0,0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0
@@ -209,11 +213,12 @@ WireConnection;64;2;75;0
 WireConnection;60;0;64;0
 WireConnection;60;1;61;0
 WireConnection;72;0;60;0
-WireConnection;73;0;72;0
 WireConnection;58;0;44;1
+WireConnection;73;0;72;0
 WireConnection;59;0;44;2
 WireConnection;59;2;73;0
 WireConnection;59;3;58;0
+WireConnection;5;5;76;0
 WireConnection;9;0;59;0
 WireConnection;9;1;5;0
 WireConnection;48;0;9;0
@@ -224,4 +229,4 @@ WireConnection;8;3;3;0
 WireConnection;0;9;3;4
 WireConnection;0;13;8;0
 ASEEND*/
-//CHKSM=DDE369422C7C30CDF27EF219CE232588E7F9BD37
+//CHKSM=C164DB4D4D18C0B8989672508866A22E9EDACB63
