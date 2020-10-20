@@ -245,7 +245,6 @@ public class Inventory : MonoBehaviour
             if(inventory[i] == null)
             {
                 inventory[i] = itemStack;
-                
                 return null;
             }
             else if(inventory[i].item.id == itemStack.item.id)
@@ -261,22 +260,34 @@ public class Inventory : MonoBehaviour
                     inventory[i].size = inventory[i].item.maxStack;
                 }
             }
+            if (itemStack.size <= 0)
+            {
+                return null;
+            }
         }
-        if(itemStack.size <= 0)
-        {
-            return null;
-        }
-        else
-        {
-            return itemStack;
-        }
+        return itemStack;
     }
 
     public void ChangeStackCount(int index, int newCount)
     {
+        if(newCount == 0)
+        {
+            inventory[index] = null;
+        }
         if(inventory[index] != null)
         {
             inventory[index].size = newCount;
+        }
+    }
+    public void DecrementStack(int index)
+    {
+        if (inventory[index] != null)
+        {
+            inventory[index].size -= 1;
+            if(inventory[index].size == 0)
+            {
+                inventory[index] = null;
+            }
         }
     }
 }

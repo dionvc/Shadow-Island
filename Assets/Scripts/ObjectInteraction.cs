@@ -74,19 +74,21 @@ public class ObjectInteraction : MonoBehaviour
                     if(buildingManager.CheckPlacement(colliders, out mineable))
                     {
                         placeSprite.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.25f);
-                        if (Input.GetMouseButtonDown(0))
+                        if (Input.GetMouseButton(0))
                         {
                             GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
                             building.GetComponent<CraftingManagerFixed>().SetMineable(mineable);
+                            mouseInventory.DecrementStack(0);
                         }
                     }
                 }
                 else if (colliders.Length == 0)
                 {
                     placeSprite.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.25f);
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButton(0))
                     {
                         Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                        mouseInventory.DecrementStack(0);
                     }
                 }
                 else
@@ -158,6 +160,10 @@ public class ObjectInteraction : MonoBehaviour
             {
                 currentMineable = null;
             }
+        }
+        else
+        {
+            placeSprite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
         }
 
         if(currentMineable != null)
