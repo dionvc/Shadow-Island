@@ -30,7 +30,7 @@ public class TimeKeeper : MonoBehaviour
         {
             globalLight.transform.eulerAngles = new Vector3(30, -50.0f + 100.0f * (((time - timeMax/5.0f) * (1.25f) / timeMax)), 0);
         }
-        else if(time < timeMax / 5.0f)
+        else if(time <= timeMax / 5.0f)
         {
             globalLight.transform.eulerAngles = new Vector3(30, -50.0f * (5.0f * time / timeMax), 0);
         }

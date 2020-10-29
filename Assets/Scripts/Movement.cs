@@ -11,6 +11,8 @@ public class Movement : MonoBehaviour
     int idle;
     int left;
     int right;
+    int downright;
+    int downleft;
     int currentState;
     Animator animator;
     int moveLeft = 0;
@@ -21,46 +23,55 @@ public class Movement : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        up = Animator.StringToHash("RobotWalkUp");
-        down = Animator.StringToHash("RobotWalkDown");
-        left = Animator.StringToHash("RobotWalkLeft");
-        right = Animator.StringToHash("RobotWalkRight");
+        up = Animator.StringToHash("RobotUp");
+        down = Animator.StringToHash("RobotDown");
+        left = Animator.StringToHash("RobotLeft");
+        right = Animator.StringToHash("RobotRight");
         idle = Animator.StringToHash("RobotIdle");
+        downleft = Animator.StringToHash("RobotDownLeft");
+        downright = Animator.StringToHash("RobotDownRight");
         currentState = idle;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        float hori = (moveLeft + moveRight) * playerSpeed;
-        float vert = (moveUp + moveDown) * playerSpeed;
-        playerBody.velocity = new Vector3(hori , vert);
-        if (Mathf.Abs(vert) >= Mathf.Abs(hori) && vert != 0)
+        int horiCode = moveLeft + moveRight;
+        int vertCode = moveUp + moveDown;
+        playerBody.velocity = new Vector3(horiCode * playerSpeed, vertCode * playerSpeed);
+        if (horiCode == 1 && vertCode == 1)
         {
-            if (vert > 0)
-            {
-                ChangeAnimationState(up);
-            }
-            else
-            {
-                ChangeAnimationState(down);
-            }
+            //up right
         }
-        else if (Mathf.Abs(hori) >= Mathf.Abs(vert) && hori != 0)
+        else if (horiCode == 1 && vertCode == 0)
         {
-            if (hori < 0)
-            {
-                ChangeAnimationState(left);
-            }
-            else
-            {
-                ChangeAnimationState(right);
-            }
+            ChangeAnimationState(right);
         }
-        else
+        else if (horiCode == 1 && vertCode == -1)
         {
-            ChangeAnimationState(idle);
+            ChangeAnimationState(downright);
         }
+        else if (horiCode == 0 && vertCode == -1)
+        {
+            ChangeAnimationState(down);
+        }
+        else if (horiCode == -1 && vertCode == -1)
+        {
+            ChangeAnimationState(downleft);
+        }
+        else if (horiCode == -1 && vertCode == 0)
+        {
+            ChangeAnimationState(left);
+        }
+        else if (horiCode == -1 && vertCode == 1)
+        {
+            //up left
+        }
+        else if (horiCode == 0 && vertCode == 1)
+        {
+            ChangeAnimationState(up);
+        }
+        
         moveLeft = 0;
         moveRight = 0;
         moveUp = 0;

@@ -6,11 +6,12 @@ public class WarehouseManager : MonoBehaviour
 {
     [SerializeField] GameObject resourceGatherer;
     [SerializeField] GameObject[] ports;
-    int resourceGathererCount = 0;
+    Inventory inventory;
+    int resourceGathererCount = 60;
     // Start is called before the first frame update
     void Start()
     {
-        
+        inventory = GetComponent<Inventory>();
     }
 
     // Update is called once per frame
@@ -25,11 +26,24 @@ public class WarehouseManager : MonoBehaviour
         return ports[0];
     }
 
-    public void RequestGatherer(BuildingManager building)
+    public void RequestGatherer(WarehouseRequester requester)
     {
         //instantiate a resourceGatherer to go to building and get resources
         ResourcePather rp = Instantiate(resourceGatherer, RequestPort().transform.position, Quaternion.identity).GetComponent<ResourcePather>();
-        rp.SetBuilding(building);
+        rp.SetRequester(requester);
         rp.SetWarehouse(this);
     }
+
+    public bool DepositResources(List<ItemStack> resources)
+    {
+        for(int i = 0; i < resources.Count; i++)
+        {
+            resources[i] = inventory.InsertStack(resources[i]);
+            if(resources[i] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    } 
 }

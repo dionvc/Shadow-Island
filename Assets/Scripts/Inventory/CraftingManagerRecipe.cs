@@ -69,9 +69,4 @@ public class CraftingManagerRecipe : CraftingManager
     {
         return recipe;
     }
-
-    public override Queue<Recipe> GetRecipes()
-    {
-        return null;
-    }
 }

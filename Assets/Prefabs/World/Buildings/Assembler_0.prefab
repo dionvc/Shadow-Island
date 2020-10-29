@@ -172,6 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c25c8b8ec42cf0445bfbc021363de4db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &3418357280737368466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,3 +191,4 @@ MonoBehaviour:
   amountOnMine: 1
   totalAmount: 1
   miningTime: 200
+  miningtag: 

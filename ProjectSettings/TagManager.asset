@@ -14,7 +14,7 @@ TagManager:
   - UI
   - 
   - 
-  - Light
+  - Damageable
   - WarehouseNetwork
   - 
   - 
@@ -54,6 +54,6 @@ TagManager:
   - name: Air
     uniqueID: 2678135945
     locked: 0
-  - name: UI
+  - name: Effects
     uniqueID: 937940447
     locked: 0

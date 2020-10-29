@@ -15,12 +15,12 @@ public class Mineable : MonoBehaviour
         if (amountOnMine >= totalAmount)
         {
             Destroy(this.gameObject);
-            inventory.InsertStack(new ItemStack(Definitions.Instance.ItemDefinitions[itemIDresult], totalAmount));
+            inventory.InsertStack(new ItemStack(Definitions.Instance.ItemDictionary[itemIDresult], totalAmount));
         }
         else
         {
             totalAmount -= amountOnMine;
-            inventory.InsertStack(new ItemStack(Definitions.Instance.ItemDefinitions[itemIDresult], amountOnMine));
+            inventory.InsertStack(new ItemStack(Definitions.Instance.ItemDictionary[itemIDresult], amountOnMine));
         }
     }
 }

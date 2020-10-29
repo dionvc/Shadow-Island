@@ -87,8 +87,4 @@ public class CraftingManagerFixed : CraftingManager
     {
         return null;
     }
-    public override Queue<Recipe> GetRecipes()
-    {
-        return null;
-    }
 }

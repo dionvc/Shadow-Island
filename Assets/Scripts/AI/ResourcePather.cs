@@ -4,17 +4,26 @@ using UnityEngine;
 
 public class ResourcePather : MonoBehaviour
 {
-    public enum GatheringState
+    public enum MoveState
     {
-        NoResource = 1,
-        Resource = 0,
-        EnteringPort = 2,
-        Gathering = 3,
-        RequestingPort = 4
+        toBuilding,
+        atBuilding,
+        toWarehouse,
+        requestingPort,
+        enteringPort
     }
+
+    public enum ResourceState
+    {
+        resource,
+        noResource
+    }
+
+    List<ItemStack> resources;
     WarehouseManager warehouseManager;
-    BuildingManager buildingManager;
-    GatheringState gatheringState = GatheringState.NoResource;
+    WarehouseRequester warehouseRequester;
+    MoveState moveState = MoveState.toBuilding;
+    ResourceState resourceState = ResourceState.noResource;
     Vector3 targetPort = Vector3.zero;
     Vector3 move = Vector3.zero;
     float satisfactionRadius = 0.25f;
@@ -39,56 +48,58 @@ public class ResourcePather : MonoBehaviour
     void FixedUpdate()
     {
         move = new Vector3(0, 0, 0);
-        if (gatheringState == GatheringState.NoResource)
+        if (moveState == MoveState.toBuilding)
         {
             //going to building
-            move = buildingManager.transform.position - this.transform.position;
+            move = warehouseRequester.transform.position - this.transform.position;
             if (move.magnitude < satisfactionRadius)
             {
-                gatheringState = GatheringState.Gathering;
+                //deposit resources
+                moveState = MoveState.atBuilding;
             }
             else
             {
                 this.transform.position += move.normalized * speed;
             }
         }
-        else if(gatheringState == GatheringState.Gathering)
+        else if(moveState == MoveState.atBuilding)
         {
             counter++;
             if(counter >= gatheringTime)
             {
                 counter = 0;
-                gatheringState = GatheringState.Resource;
+                moveState = MoveState.toWarehouse;
+                resources = warehouseRequester.GatherResources();
             }
         }
-        else if(gatheringState == GatheringState.Resource)
+        else if(moveState == MoveState.toWarehouse)
         {
-            //going to warehouse
             move = warehouseManager.transform.position - this.transform.position;
             if (move.magnitude < warehouseRequestRadius)
             {
                 targetPort = warehouseManager.RequestPort().transform.position;
-                gatheringState = GatheringState.RequestingPort;
+                moveState = MoveState.requestingPort;
             }
             else
             {
                 this.transform.position += move.normalized * speed;
             }
         }
-        else if(gatheringState == GatheringState.RequestingPort)
+        else if(moveState == MoveState.requestingPort)
         {
             counter++;
             if(counter > requestWait)
             {
-                gatheringState = GatheringState.EnteringPort;
+                moveState = MoveState.enteringPort;
                 counter = 0;
             }
         }
-        else if(gatheringState == GatheringState.EnteringPort)
+        else if(moveState == MoveState.enteringPort)
         {
             move = targetPort - this.transform.position;
             if(move.magnitude < satisfactionRadius)
             {
+                warehouseManager.DepositResources(resources);
                 Destroy(this.gameObject);
             }
             else
@@ -100,29 +111,29 @@ public class ResourcePather : MonoBehaviour
         //handle sprite representation
         if(move.x == 0 && move.y == 0)
         {
-            srenderer.sprite = regular[(int)gatheringState%2];
+            srenderer.sprite = regular[(int)moveState%2];
         }
         else if(move.x > 0 && move.x > Mathf.Abs(move.y))
         {
-            srenderer.sprite = right[(int)gatheringState%2];
+            srenderer.sprite = right[(int)moveState%2];
         }
         else if(move.x < 0 && -move.x > Mathf.Abs(move.y))
         {
-            srenderer.sprite = left[(int)gatheringState%2];
+            srenderer.sprite = left[(int)moveState%2];
         }
         else if(move.y > 0 && move.y > Mathf.Abs(move.x))
         {
-            srenderer.sprite = up[(int)gatheringState%2];
+            srenderer.sprite = up[(int)moveState%2];
         }
         else if(move.y < 0 && move.y > Mathf.Abs(move.x))
         {
-            srenderer.sprite = down[(int)gatheringState%2];
+            srenderer.sprite = down[(int)moveState%2];
         }
     }
 
-    public void SetBuilding(BuildingManager buildingManager)
+    public void SetRequester(WarehouseRequester requester)
     {
-        this.buildingManager = buildingManager;
+        this.warehouseRequester = requester;
     }
 
     public void SetWarehouse(WarehouseManager warehouseManager)

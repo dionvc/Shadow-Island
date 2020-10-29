@@ -5,4 +5,5 @@ using UnityEngine;
 public class CraftingSlot : MonoBehaviour
 {
     public int recipeID { get; set; }
+    public int amount { get; set; }
 }

@@ -133,8 +133,36 @@ public class InventoryRecipe : Inventory
         }
     }
 
+    public List<ItemStack> GatherResources()
+    {
+        List<ItemStack> resources = new List<ItemStack>();
+        for(int i = 0; i < outputInventory.Count; i++)
+        {
+            resources.Add(outputInventory[i]);
+            outputInventory[i] = null;
+        }
+        return resources;
+    }
+
     public List<Recipe> GetRecipes()
     {
         return Definitions.Instance.RecipeDefinitions;
+    }
+
+    public bool NeedGather()
+    {
+        for(int i = 0; i < outputInventory.Count; i++)
+        {
+            if(outputInventory[i] != null && outputInventory[i].size >= 2 * outputInventory[i].item.maxStack / 3)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool NeedItems()
+    {
+        return false;
     }
 }

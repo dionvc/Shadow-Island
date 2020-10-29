@@ -14,7 +14,7 @@ public class BuildingManager : MonoBehaviour
     public bool CheckPlacement(Collider2D[] collisionList, out Mineable mineable)
     {
         mineable = null;
-        if(collisionList.Length == 1)
+        if(collisionList.Length == 1 && collisionList[0] != null)
         {
             if(collisionList[0].gameObject.TryGetComponent(out mineable))
             {

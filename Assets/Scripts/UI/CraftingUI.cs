@@ -64,10 +64,29 @@ public class CraftingUI : MonoBehaviour
 
     void OnClickCraftingSlot(GameObject craftingSlot)
     {
-        CraftingManager craftingManager;
-        if(inventory.gameObject.TryGetComponent(out craftingManager))
+        CraftingSlot slotScript = craftingSlot.GetComponent<CraftingSlot>();
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            craftingManager.SetRecipe(Definitions.Instance.RecipeDictionary[craftingSlot.GetComponent<CraftingSlot>().recipeID]);
+            CraftingManagerQueue queue;
+            if(inventory.gameObject.TryGetComponent(out queue))
+            {
+                queue.SetRecipe(Definitions.Instance.RecipeDictionary[slotScript.recipeID], Mathf.Min(slotScript.amount, 5));
+                return;
+            }
+        }
+        else if(Input.GetKey(KeyCode.LeftControl))
+        {
+            CraftingManagerQueue queue;
+            if (inventory.gameObject.TryGetComponent(out queue))
+            {
+                queue.SetRecipe(Definitions.Instance.RecipeDictionary[craftingSlot.GetComponent<CraftingSlot>().recipeID], slotScript.amount);
+                return;
+            }
+        }
+        CraftingManager craftingManager;
+        if (inventory.gameObject.TryGetComponent(out craftingManager))
+        {
+            craftingManager.SetRecipe(Definitions.Instance.RecipeDictionary[slotScript.recipeID]);
         }
         if(menuToHideOnRecipeSelect != null)
         {
@@ -105,7 +124,9 @@ public class CraftingUI : MonoBehaviour
         {
             craftingSlot.GetComponent<Button>().interactable = true;
         }
-        craftingSlot.GetComponent<CraftingSlot>().recipeID = recipe.Key.recipeID;
+        CraftingSlot slotScript = craftingSlot.GetComponent<CraftingSlot>();
+        slotScript.recipeID = recipe.Key.recipeID;
+        slotScript.amount = recipe.Value;
     }
 
     void UpdateSlot(Recipe recipe, GameObject craftingSlot)

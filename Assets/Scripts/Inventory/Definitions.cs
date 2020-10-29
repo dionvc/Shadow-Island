@@ -29,6 +29,8 @@ public class Definitions : MonoBehaviour
     }
     #endregion
 
+    [SerializeField] ParticleSystem.EmitParams explosionParams;
+
     public List<Recipe> RecipeDefinitions = new List<Recipe>();
 
     private Dictionary<int, Recipe> recipeDic;
@@ -46,7 +48,8 @@ public class Definitions : MonoBehaviour
         }
     }
 
-    public List<Item> ItemDefinitions = new List<Item>();
+    [SerializeField] List<Item> ItemDefinitions = new List<Item>();
+    [SerializeField] List<ItemThrowable> ItemThrowableDefintions = new List<ItemThrowable>();
 
     private Dictionary<int, Item> itemDic;
     public Dictionary<int, Item> ItemDictionary
@@ -58,6 +61,7 @@ public class Definitions : MonoBehaviour
             {
                 itemDic = new Dictionary<int, Item>();
                 foreach (Item item in ItemDefinitions) itemDic[item.id] = item;
+                foreach (Item item in ItemThrowableDefintions) itemDic[item.id] = item;
             }
             return itemDic;
         }

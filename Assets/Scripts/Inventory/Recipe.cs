@@ -19,6 +19,11 @@ public class Ingredient
 {
     public int ItemID;
     public int Amount;
+    public Ingredient(int ItemID, int Amount)
+    {
+        this.ItemID = ItemID;
+        this.Amount = Amount;
+    }
     public Item item
     {
         get

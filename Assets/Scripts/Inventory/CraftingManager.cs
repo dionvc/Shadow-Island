@@ -12,5 +12,4 @@ public abstract class CraftingManager : MonoBehaviour
 
     public abstract void SetRecipe(Recipe recipe);
     public abstract Recipe GetRecipe();
-    public abstract Queue<Recipe> GetRecipes();
 }

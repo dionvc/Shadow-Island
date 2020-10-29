@@ -16,6 +16,7 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] Grid placeGrid = null;
     [SerializeField] Inventory mouseInventory = null;
     [SerializeField] GameObject placeSprite = null;
+    [SerializeField] SpriteRenderer placeSpriteRenderer;
 
     //Mining components/variables
     public Mineable currentMineable { get; private set; } = null;
@@ -27,13 +28,14 @@ public class ObjectInteraction : MonoBehaviour
         filter = new ContactFilter2D();
         filter.useLayerMask = true;
         filter.layerMask = layerMask;
+        filter.useTriggers = false;
         playerInventory = GetComponent<Inventory>();
-
+        placeSpriteRenderer = placeSprite.GetComponent<SpriteRenderer>();
         //Debug code
         Definitions definitions = Definitions.Instance;
-        for (int i = 0; i < definitions.ItemDefinitions.Count && i < playerInventory.inventoryReadOnly.Count; i++)
+        foreach (KeyValuePair<int,Item> item in Definitions.Instance.ItemDictionary)
         {
-            playerInventory.InsertAt(i, new ItemStack(definitions.ItemDefinitions[i], 5));
+            playerInventory.InsertStack(new ItemStack(item.Value, 5));
         }
     }
 
@@ -42,68 +44,87 @@ public class ObjectInteraction : MonoBehaviour
     {
         if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
+            
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-
             RaycastHit2D[] hits = new RaycastHit2D[1];
             Physics2D.Raycast(mousePos2D, Vector2.zero, filter, hits);
-            if (mouseInventory.inventoryReadOnly[0] != null && mouseInventory.inventoryReadOnly[0].item.placeableResult != null)
-            {
-                Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector3 placeRounded = new Vector3(Mathf.Round(place.x), Mathf.Round(place.y), 0);
-                Vector3 placeVector = placeGrid.WorldToCell(placeRounded);
-                Vector3 size = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<BoxCollider2D>().size;
-                size = new Vector3(Mathf.Ceil(size.x), Mathf.Ceil(size.y));
-                Vector3 offset = new Vector3(0, 0);
-                if (Mathf.Round(size.x) % 2 != 0)
-                {
-                    offset.x = 0.5f;
-                }
-                if (Mathf.Round(size.y) % 2 != 0)
-                {
-                    offset.y = 0.5f;
-                }
-                placeSprite.transform.position = placeVector - offset;
-                placeSprite.GetComponent<SpriteRenderer>().sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
 
-                Collider2D[] colliders = Physics2D.OverlapBoxAll(placeVector - offset, size / 2.0f, 0.0f);
-                BuildingManager buildingManager;
-                if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
+            if (mouseInventory.inventoryReadOnly[0] != null)
+            {
+                ItemThrowable throwable = mouseInventory.inventoryReadOnly[0].item as ItemThrowable;
+                if (throwable != null && Input.GetMouseButtonDown(0))
                 {
-                    Mineable mineable;
-                    if(buildingManager.CheckPlacement(colliders, out mineable))
+                    Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    ThrownItem thrown = Instantiate(throwable.thrownResult, this.transform.position, Quaternion.identity).GetComponent<ThrownItem>();
+                    thrown.SetTarget(place);
+                    mouseInventory.DecrementStack(0);
+                }
+                else if (mouseInventory.inventoryReadOnly[0].item.placeableResult != null)
+                {
+                    Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Vector3 placeRounded = new Vector3(Mathf.Round(place.x), Mathf.Round(place.y), 0);
+                    Vector3 placeVector = placeGrid.WorldToCell(placeRounded);
+                    Vector3 size = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<BoxCollider2D>().size;
+                    size = new Vector3(Mathf.Ceil(size.x), Mathf.Ceil(size.y));
+                    Vector3 offset = new Vector3(0, 0);
+                    if (Mathf.Round(size.x) % 2 != 0)
                     {
-                        placeSprite.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.25f);
+                        offset.x = 0.5f;
+                    }
+                    if (Mathf.Round(size.y) % 2 != 0)
+                    {
+                        offset.y = 0.5f;
+                    }
+                    placeSprite.transform.position = placeVector - offset;
+                    placeSpriteRenderer.sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
+                    Collider2D[] colliders = new Collider2D[1];
+                    int colliderCount = Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders);
+                    BuildingManager buildingManager;
+                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
+                    {
+                        Mineable mineable;
+                        if (buildingManager.CheckPlacement(colliders, out mineable))
+                        {
+                            placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
+                            if (Input.GetMouseButton(0))
+                            {
+                                GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                                building.GetComponent<CraftingManagerFixed>().SetMineable(mineable);
+                                mouseInventory.DecrementStack(0);
+                            }
+                        }
+                        else
+                        {
+                            placeSpriteRenderer.color = new Color(1, 0, 0, 0.25f);
+                        }
+                    }
+                    else if (colliderCount == 0)
+                    {
+                        placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                         if (Input.GetMouseButton(0))
                         {
-                            GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
-                            building.GetComponent<CraftingManagerFixed>().SetMineable(mineable);
+                            Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
                             mouseInventory.DecrementStack(0);
                         }
                     }
-                }
-                else if (colliders.Length == 0)
-                {
-                    placeSprite.GetComponent<SpriteRenderer>().color = new Color(0, 1, 0, 0.25f);
-                    if (Input.GetMouseButton(0))
+                    else
                     {
-                        Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
-                        mouseInventory.DecrementStack(0);
+                        placeSpriteRenderer.color = new Color(1, 0, 0, 0.25f);
                     }
                 }
-                else
+                else if (mouseInventory.inventoryReadOnly[0].item.placeableResult == null)
                 {
-                    placeSprite.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.25f);
+                    placeSpriteRenderer.color = new Color(1, 1, 1, 0);
                 }
             }
-            else if(mouseInventory.inventoryReadOnly[0] == null || mouseInventory.inventoryReadOnly[0].item.placeableResult == null)
+            else
             {
-                placeSprite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                placeSpriteRenderer.color = new Color(1, 1, 1, 0);
             }
 
             if (hits[0].collider != null)
             {
-                Debug.Log(hits[0].collider.name);
                 #region Left Click Interaction
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -163,7 +184,7 @@ public class ObjectInteraction : MonoBehaviour
         }
         else
         {
-            placeSprite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+            placeSpriteRenderer.color = new Color(1, 1, 1, 0);
         }
 
         if(currentMineable != null)
