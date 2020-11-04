@@ -302,5 +302,6 @@ public class Generator : MonoBehaviour
                 }
             }
         }
+        Pathing.Instance.CalculatePathablity(sizeX * 32, sizeY * 32);
     }
 }

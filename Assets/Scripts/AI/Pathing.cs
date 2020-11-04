@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEditor;
 
 public class Pathing : MonoBehaviour
 {
@@ -28,10 +29,18 @@ public class Pathing : MonoBehaviour
     }
     #endregion
 
-    bool[][] isNotPathable;
+    int[][] distToObstacle;
 
     [SerializeField] Grid tileGrid;
-    public PathNode GetPath(Vector3 start, Vector3 target, int pathTimeout)
+    /// <summary>
+    /// Agent size is the width of the collider rounded up of the agent, or in the case of a group the largest collider's width
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="target"></param>
+    /// <param name="pathTimeout"></param>
+    /// <param name="agentSize"></param>
+    /// <returns></returns>
+    public PathNode GetPath(Vector3 start, Vector3 target, int pathTimeout, int agentSize)
     {
         Vector3Int startCoords = tileGrid.WorldToCell(start);
         Vector3Int endCoords = tileGrid.WorldToCell(target);
@@ -67,10 +76,6 @@ public class Pathing : MonoBehaviour
                 for (int j = curNode.coords[1] - 1; j <= curNode.coords[1] + 1; j++)
                 {
                     bool ignore = false;
-                    if (i < 0 || j < 0) //Check if coords are outside worldSize
-                    {
-                        ignore = true;
-                    }
                     if (ignore == false) //else check that coords are not already in closedList
                     {
                         for (int k = 0; k < closedList.Count; k++)
@@ -95,11 +100,7 @@ public class Pathing : MonoBehaviour
                     }
                     if (!ignore) //if neither of the preceding conditions set ignore to false, add tile to open list on path search
                     {
-                        bool walkable = true;
-                        if (!IsLocationPathable(i, j))
-                        {
-                            walkable = false;
-                        }
+                        bool walkable = IsPathable(i, j, agentSize, curNode.coords.x, curNode.coords.y);
                         if (walkable == true)
                         {
                             Vector3Int coords = new Vector3Int(i ,j ,0);
@@ -121,10 +122,15 @@ public class Pathing : MonoBehaviour
 
     public void InitializePathingGrid(int sizeX, int sizeY)
     {
-        isNotPathable = new bool[sizeX][];
+        int maxPathSize = Mathf.Min(sizeX, sizeY);
+        distToObstacle = new int[sizeX][];
         for(int i = 0; i < sizeX; i++)
         {
-            isNotPathable[i] = new bool[sizeY];
+            distToObstacle[i] = new int[sizeY];
+            for (int j = 0; j < sizeY; j++)
+            {
+                distToObstacle[i][j] = maxPathSize;
+            }
         }
     }
     /// <summary>
@@ -134,21 +140,103 @@ public class Pathing : MonoBehaviour
     /// <param name="y"></param>
     public void SetUnpathableLocation(int x, int y)
     {
-        isNotPathable[x][y] = true;
+        distToObstacle[x][y] = -1;
     }
 
     /// <summary>
-    /// Sets a location to be available for pathing
+    /// Calculates the pathablity of tiles based on static objects (essentially just cliffs and water for now)
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
-    public void SetPathableLocation(int x, int y)
+    public void CalculatePathablity(int sizeX, int sizeY)
     {
-        isNotPathable[x][y] = false;
+        //Can skip the very edges farthest edges of the map, we know they will be unpathable as they are water
+
+        //First time, start from the bottom left
+        for (int i = 1; i < sizeX - 1; i++)
+        {
+            for (int j = 1; j < sizeY - 1; j++)
+            {
+                if (distToObstacle[i][j] != -1)
+                {
+                    int[] values = new int[8];
+                    values[0] = distToObstacle[i - 1][j - 1];
+                    values[1] = distToObstacle[i - 1][j];
+                    values[2] = distToObstacle[i - 1][j + 1];
+                    values[3] = distToObstacle[i][j - 1];
+                    values[4] = distToObstacle[i][j + 1];
+                    values[5] = distToObstacle[i + 1][j - 1];
+                    values[6] = distToObstacle[i + 1][j];
+                    values[7] = distToObstacle[i + 1][j + 1];
+                    distToObstacle[i][j] = Mathf.Min(values) + 2;
+                }
+            }
+        }
+        //Second time, start from the top right
+        for(int i = sizeX - 1; i > 0; i--)
+        {
+            for(int j = sizeY - 1; j > 0; j--)
+            {
+                if (distToObstacle[i][j] != -1)
+                {
+                    int[] values = new int[8];
+                    values[0] = distToObstacle[i - 1][j - 1];
+                    values[1] = distToObstacle[i - 1][j];
+                    values[2] = distToObstacle[i - 1][j + 1];
+                    values[3] = distToObstacle[i][j - 1];
+                    values[4] = distToObstacle[i][j + 1];
+                    values[5] = distToObstacle[i + 1][j - 1];
+                    values[6] = distToObstacle[i + 1][j];
+                    values[7] = distToObstacle[i + 1][j + 1];
+                    distToObstacle[i][j] = Mathf.Min(values) + 2;
+                }
+            }
+        }
     }
 
-    public bool IsLocationPathable(int x, int y)
+    /// <summary>
+    /// Agent size is the box colliders size rounded up
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="agentSize"></param>
+    /// <returns></returns>
+    public bool IsPathable(int x, int y, int agentSize, int prevX, int prevY)
     {
-        return !isNotPathable[x][y];
+        //Detect if the new node is on a diagonal
+        if(x - prevX != 0 && y - prevY != 0)
+        {
+            //Don't allow diagonal movement if moving diagonal would cause collision with corner of an obstacle
+            if(x == prevX + 1 && y == prevY + 1 && (distToObstacle[prevX + 1][prevY] <= agentSize || distToObstacle[prevX][prevY+1] <= agentSize))
+            {
+                return false;
+            }
+            else if(x == prevX + 1 && y == prevY - 1 && (distToObstacle[prevX + 1][prevY] < agentSize || distToObstacle[prevX][prevY -1] < agentSize))
+            {
+                return false;
+            }
+            else if(x == prevX - 1 && y == prevY + 1 && (distToObstacle[prevX - 1][prevY] < agentSize || distToObstacle[prevX][prevY + 1] < agentSize))
+            {
+                return false;
+            }
+            else if(x == prevX - 1 && y == prevY - 1 && (distToObstacle[prevX - 1][prevY] < agentSize || distToObstacle[prevX][prevY - 1] < agentSize))
+            {
+                return false;
+            }
+        }
+        return distToObstacle[x][y] >= agentSize;
+    }
+
+    private void OnDrawGizmos()
+    {
+        for(int i = 0; i < 96; i++)
+        {
+            for(int j = 0; j < 96; j++)
+            {
+                Vector3 position = new Vector3(i + 0.5f, j + 0.5f);
+                Gizmos.DrawWireCube(position, new Vector3(0.8f, 0.8f, 0.2f));
+                Handles.Label(position, distToObstacle[i][j].ToString());
+            }
+        }
     }
 }

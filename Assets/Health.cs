@@ -19,6 +19,7 @@ public class Health : MonoBehaviour
     private void Start()
     {
         healthBar = GetComponentInChildren<HealthBar>();
+        healthBar.Initialize();
         healthBar.UpdateBar(health / maxHealth);
     }
 
@@ -26,5 +27,9 @@ public class Health : MonoBehaviour
     {
         health -= damage;
         healthBar.UpdateBar(health / maxHealth);
+        if(health <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
