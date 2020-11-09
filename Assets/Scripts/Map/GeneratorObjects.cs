@@ -7,13 +7,15 @@ public class GeneratorObjects : MonoBehaviour
 {
     Generator generator;
     [SerializeField] Grid grid;
+    [SerializeField] Tilemap water;
+    [SerializeField] Tilemap cliff;
     [SerializeField] List<float> treeValues;
     [SerializeField] List<GameObject> trees;
     [SerializeField] List<GameObject> deadTrees;
     [SerializeField] List<float> oreValues;
     [SerializeField] List<GameObject> ores;
+    float[] oreSeeds;
     int generateDelay = 0;
-    [SerializeField] float oreDensity;
     [SerializeField] float treeDensity;
     ContactFilter2D filter;
     [SerializeField] LayerMask layerMask = 0;
@@ -28,6 +30,7 @@ public class GeneratorObjects : MonoBehaviour
         filter.useLayerMask = true;
         filter.useTriggers = false;
         colliders = new Collider2D[1];
+        oreSeeds = new float[ores.Count];
     }
 
     // Update is called once per frame
@@ -35,40 +38,22 @@ public class GeneratorObjects : MonoBehaviour
     {
         generateDelay++;
         if (generateDelay == 60) {
-            PoissonDiscSampler oreSampler = new PoissonDiscSampler(generator.sizeX * 32, generator.sizeY * 32, oreDensity);
-            IEnumerable<Vector2> oreSamples = oreSampler.Samples();
-            foreach(Vector2 sample in oreSamples)
+
+            for (int x = 0; x < generator.sizeX * 32; x++)
             {
-                Vector2 rounded = new Vector2Int((int)Mathf.Round(sample.x), (int)Mathf.Round(sample.y));
-                float min = 1.0f;
-                int index = -1;
-                for (int i = 0; i < ores.Count; i++)
+                for (int y = 0; y < generator.sizeY * 32; y++)
                 {
-                    float value = Mathf.Abs(oreValues[i] - generator.SamplePerlin((int)rounded.x / 32, (int)rounded.y / 32, (int)rounded.x % 32, (int)rounded.y % 32));
-                    if (value < min)
+                    for (int i = 0; i < ores.Count; i++)
                     {
-                        min = value;
-                        index = i;
+                        float perlinValue = SamplePerlinOre(i, x, y, generator.sizeX, generator.sizeY);
+                        if (!cliff.HasTile(new Vector3Int(x,y,0)) && !water.HasTile(new Vector3Int(x,y,0)) && perlinValue > oreValues[i])
+                        {
+                            GameObject ore = Instantiate(ores[i], new Vector2(x + 0.5f, y + 0.5f), Quaternion.identity);
+                            ore.GetComponent<Mineable>().SetAmount(SamplePerlinOreAmount(i, x, y, generator.sizeX, generator.sizeY, perlinValue));
+                            break;
+                        }
                     }
-                }
-                if (index != -1)
-                {
-                    BoxCollider2D collider = ores[index].GetComponent<BoxCollider2D>();
-                    rounded = (Vector3)grid.WorldToCell(rounded);
-                    Vector2 offset = new Vector2(0, 0);
-                    Vector3 size = new Vector3(Mathf.Ceil(collider.size.x), Mathf.Ceil(collider.size.y));
-                    if (Mathf.Round(size.x) % 2 != 0)
-                    {
-                        offset.x = 0.5f;
-                    }
-                    if (Mathf.Round(size.y) % 2 != 0)
-                    {
-                        offset.y = 0.5f;
-                    }
-                    if (Physics2D.OverlapBox(rounded + collider.offset - offset, size, 0.0f, filter, colliders) == 0)
-                    {
-                        Instantiate(ores[index], rounded + collider.offset - offset, Quaternion.identity);
-                    }
+
                 }
             }
 
@@ -117,5 +102,34 @@ public class GeneratorObjects : MonoBehaviour
             }
             this.enabled = false;
         }
+    }
+
+    private float SamplePerlinOre(int index, int x, int y, int sizeX, int sizeY)
+    {
+        if(oreSeeds[index] == 0)
+        {
+            oreSeeds[index] = Random.value + Random.Range(0, 1024);
+        }
+        //float attenuation = Mathf.Clamp( 0.5f * (Mathf.Pow((sizeX / 2.0f - x / 32.0f), 2) + Mathf.Pow((sizeY / 2.0f - y / 32.0f), 2)), 0.1f, 1.0f);
+        return Mathf.Clamp(Mathf.PerlinNoise(
+            (x / (12.0f)) + oreSeeds[index], 
+            (y / (12.0f)) + oreSeeds[index])
+            , 0, 1.0f);
+    }
+
+    /// <summary>
+    /// Returns an amount of ore which increases the further from the center of the map
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="sizeX"></param>
+    /// <param name="sizeY"></param>
+    /// <returns></returns>
+    private int SamplePerlinOreAmount(int index, int x, int y, int sizeX, int sizeY, float perlinValue)
+    {
+        float diff = perlinValue - oreValues[index];
+        int amount = (int) (diff * 100);
+        return (amount * amount) + 1;
     }
 }

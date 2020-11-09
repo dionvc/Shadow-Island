@@ -11,20 +11,20 @@ public class BuildingManager : MonoBehaviour
         
     }
 
-    public bool CheckPlacement(Collider2D[] collisionList, out Mineable mineable)
+    public bool CheckPlacement(List<Collider2D> collisionList, out List<Mineable> mineableList)
     {
-        mineable = null;
-        if(collisionList.Length == 1 && collisionList[0] != null)
-        {
-            if(collisionList[0].gameObject.TryGetComponent(out mineable))
+        mineableList = new List<Mineable>();
+
+        for (int i = 0; i < collisionList.Count; i++) {
+            Mineable mineable;
+            if (collisionList[i].gameObject.TryGetComponent(out mineable))
             {
-                if(mineable.miningtag == miningTag)
+                if (mineable.miningtag == miningTag)
                 {
-                    return true;
+                    mineableList.Add(mineable);
                 }
                 else
                 {
-                    mineable = null;
                     return false;
                 }
             }
@@ -32,6 +32,10 @@ public class BuildingManager : MonoBehaviour
             {
                 return false;
             }
+        }
+        if(mineableList.Count > 0)
+        {
+            return true;
         }
         return false;
     }

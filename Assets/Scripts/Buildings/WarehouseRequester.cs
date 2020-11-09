@@ -40,9 +40,9 @@ public class WarehouseRequester : MonoBehaviour
         counter++;
         if(counter > 60)
         {
-            if (warehouse != null && request != RequestState.called && inventoryRecipe.NeedGather())
+            if (warehouse != null && request != RequestState.called && (inventoryRecipe.NeedGather() || inventoryRecipe.NeedItems()))
             {
-                warehouse.RequestGatherer(this);
+                warehouse.RequestGatherer(this, null);
                 request = RequestState.called;
             }
             counter = 0;

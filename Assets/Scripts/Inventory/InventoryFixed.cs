@@ -34,7 +34,37 @@ public class InventoryFixed : Inventory
 
     public override void TransferMouse(Inventory mouse, int slotID)
     {
-
+        if (mouse.inventoryReadOnly[0] == null)
+        {
+            if (slotID < inputInventory.Count)
+            {
+                mouse.InsertAt(0, inputInventory[slotID]);
+                inputInventory[slotID] = null;
+            }
+            else
+            {
+                mouse.InsertAt(0, outputInventory[slotID - inputInventory.Count]);
+                outputInventory[slotID - inputInventory.Count] = null;
+            }
+        }
+        else if (mouse.inventoryReadOnly[0] != null && slotID < inputInventory.Count)
+        {
+            if (inputInventory[slotID] == null)
+            {
+                inputInventory[slotID] = new ItemStack(mouse.inventoryReadOnly[0].item, 0);
+            }
+            inputInventory[slotID].size += mouse.inventoryReadOnly[0].size;
+            if (inputInventory[slotID].size > inputInventory[slotID].item.maxStack)
+            {
+                mouse.ChangeStackCount(0, inputInventory[slotID].size - inputInventory[slotID].item.maxStack);
+                inputInventory[slotID].size = inputInventory[slotID].item.maxStack;
+            }
+            else
+            {
+                mouse.InsertAt(0, null);
+            }
+            //Cannot insert anything into results, only take from
+        }
     }
 
     public override bool ConsumeItems(List<Ingredient> ingredients)

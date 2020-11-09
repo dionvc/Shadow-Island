@@ -6749,8 +6749,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 688409819
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -7084,7 +7084,10 @@ MonoBehaviour:
   machinePanel: {fileID: 511716275}
   layerMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 385
+  layerMaskMining:
+    serializedVersion: 2
+    m_Bits: 385
   placeGrid: {fileID: 890865978}
   mouseInventory: {fileID: 1141679284}
   placeSprite: {fileID: 240629423}
@@ -7617,7 +7620,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 439
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -9435,6 +9438,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 890865978}
+  water: {fileID: 307380807}
+  cliff: {fileID: 1820660357}
   treeValues:
   - 3.7
   - 4
@@ -9445,12 +9450,13 @@ MonoBehaviour:
   - {fileID: 2138655377942991887, guid: ba1a2faa86d87ea46accf7170b998bbe, type: 3}
   - {fileID: 1688277692788967132, guid: a1bbf74a6452ff84d8d67b3eabd50b94, type: 3}
   oreValues:
-  - 2
-  - 3
+  - 0.75
+  - 0.75
+  - 0.75
   ores:
-  - {fileID: 5512333465594531866, guid: 4f3e57eaf6e7a454889297127e1f6f03, type: 3}
-  - {fileID: 1670173419591848230, guid: 815a5b95edeaa2649ad5b6bc52cef69c, type: 3}
-  oreDensity: 10
+  - {fileID: 3660486751993314731, guid: 575182e460e645746bcf4d0d54fccbe6, type: 3}
+  - {fileID: 8133852994327834226, guid: 2b94a8c50b602af49807f4ee03dd3f5f, type: 3}
+  - {fileID: 2002207792217595347, guid: 9e3c82096da485349956757c5c34da45, type: 3}
   treeDensity: 3
   layerMask:
     serializedVersion: 2
@@ -14947,7 +14953,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &1096994810
 ParticleSystemRenderer:
   serializedVersion: 6

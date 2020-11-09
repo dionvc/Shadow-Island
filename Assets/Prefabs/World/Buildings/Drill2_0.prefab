@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6094978178305601065}
   - component: {fileID: 2941984759253927637}
   - component: {fileID: 7219257429022070315}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Drill2_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,3 +191,5 @@ MonoBehaviour:
   totalAmount: 1
   miningTime: 250
   miningtag: 
+  values: 
+  sprites: []

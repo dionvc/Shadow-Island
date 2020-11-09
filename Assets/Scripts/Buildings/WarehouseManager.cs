@@ -26,7 +26,7 @@ public class WarehouseManager : MonoBehaviour
         return ports[0];
     }
 
-    public void RequestGatherer(WarehouseRequester requester)
+    public void RequestGatherer(WarehouseRequester requester, List<Ingredient> requestedItems)
     {
         //instantiate a resourceGatherer to go to building and get resources
         ResourcePather rp = Instantiate(resourceGatherer, RequestPort().transform.position, Quaternion.identity).GetComponent<ResourcePather>();

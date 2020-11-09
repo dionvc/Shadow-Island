@@ -136,11 +136,6 @@ public class MachineUI : MonoBehaviour
         //transfer fuel
     }
 
-    public void OnClickRecipeSlot()
-    {
-        //open recipe menu
-    }
-
     public void OnClickInventorySlot(GameObject inventorySlot)
     {
         if(inventoryFixed != null)

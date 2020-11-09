@@ -10,7 +10,12 @@ public class ObjectInteraction : MonoBehaviour
 
     //Raycast variables
     [SerializeField] LayerMask layerMask;
+    [SerializeField] LayerMask layerMaskMining;
     ContactFilter2D filter;
+    ContactFilter2D filterMining;
+
+    List<Collider2D> collidersList = new List<Collider2D>(10);
+    Collider2D[] colliders = new Collider2D[1];
 
     //Placement components
     [SerializeField] Grid placeGrid = null;
@@ -25,10 +30,16 @@ public class ObjectInteraction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        filterMining = new ContactFilter2D();
+        filterMining.useLayerMask = true;
+        filterMining.layerMask = layerMaskMining;
+        filterMining.useTriggers = true;
+
         filter = new ContactFilter2D();
         filter.useLayerMask = true;
         filter.layerMask = layerMask;
         filter.useTriggers = false;
+
         playerInventory = GetComponent<Inventory>();
         placeSpriteRenderer = placeSprite.GetComponent<SpriteRenderer>();
         //Debug code
@@ -48,7 +59,7 @@ public class ObjectInteraction : MonoBehaviour
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
             RaycastHit2D[] hits = new RaycastHit2D[1];
-            Physics2D.Raycast(mousePos2D, Vector2.zero, filter, hits);
+            Physics2D.Raycast(mousePos2D, Vector2.zero, filterMining, hits);
 
             if (mouseInventory.inventoryReadOnly[0] != null)
             {
@@ -76,21 +87,24 @@ public class ObjectInteraction : MonoBehaviour
                     {
                         offset.y = 0.5f;
                     }
+
                     placeSprite.transform.position = placeVector - offset;
                     placeSpriteRenderer.sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
-                    Collider2D[] colliders = new Collider2D[1];
-                    int colliderCount = Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders);
+
+                    
                     BuildingManager buildingManager;
+
                     if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
                     {
-                        Mineable mineable;
-                        if (buildingManager.CheckPlacement(colliders, out mineable))
+                        Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filterMining, collidersList);
+                        List<Mineable> mineables;
+                        if (buildingManager.CheckPlacement(collidersList, out mineables))
                         {
                             placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                             if (Input.GetMouseButton(0))
                             {
                                 GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
-                                building.GetComponent<CraftingManagerFixed>().SetMineable(mineable);
+                                building.GetComponent<CraftingManagerFixed>().SetMineables(mineables);
                                 mouseInventory.DecrementStack(0);
                             }
                         }
@@ -99,7 +113,7 @@ public class ObjectInteraction : MonoBehaviour
                             placeSpriteRenderer.color = new Color(1, 0, 0, 0.25f);
                         }
                     }
-                    else if (colliderCount == 0)
+                    else if (Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders) == 0)
                     {
                         placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                         if (Input.GetMouseButton(0))

@@ -144,6 +144,16 @@ public class InventoryRecipe : Inventory
         return resources;
     }
 
+    public List<Ingredient> RequestIngredients()
+    {
+        List<Ingredient> requestedIngredients = new List<Ingredient>();
+        for(int i = 0; i < inputInventory.Count; i++)
+        {
+            requestedIngredients.Add(new Ingredient(slotItemIDS[i], inputInventory[i].item.maxStack - inputInventory[i].size));
+        }
+        return requestedIngredients;
+    }
+
     public List<Recipe> GetRecipes()
     {
         return Definitions.Instance.RecipeDefinitions;
@@ -163,6 +173,13 @@ public class InventoryRecipe : Inventory
 
     public bool NeedItems()
     {
+        for (int i = 0; i < inputInventory.Count; i++)
+        {
+            if (inputInventory[i] == null || inputInventory[i].size < inputInventory[i].item.maxStack / 2)
+            {
+                return true;
+            }
+        }
         return false;
     }
 }

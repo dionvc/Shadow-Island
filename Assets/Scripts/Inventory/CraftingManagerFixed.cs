@@ -5,7 +5,8 @@ using UnityEngine;
 public class CraftingManagerFixed : CraftingManager
 {
     Recipe recipe = null;
-    Mineable mineable = null;
+    Mineable[] mineables;
+    int currentMineable = 0;
     InventoryFixed inventory;
 
     public int recipeProgress {get; private set;} = 0;
@@ -22,13 +23,20 @@ public class CraftingManagerFixed : CraftingManager
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(mineable != null)
+        if (mineables != null && currentMineable < mineables.Length && mineables[currentMineable] == null)
+        {
+            currentMineable++;
+        }
+        if (mineables != null && currentMineable < mineables.Length)
         {
             recipeProgress++;
-            if(recipeProgress > mineable.miningTime)
+            if(recipeProgress > mineables[currentMineable].miningTime)
             {
-                mineable.OnMine(inventory);
-                recipeProgress = 0;
+                if(mineables[currentMineable].OnMine(inventory))
+                {
+                    recipeProgress = 0;
+                }
+                
             }
         }
         else if (recipe != null)
@@ -62,16 +70,17 @@ public class CraftingManagerFixed : CraftingManager
     /// <summary>
     /// Use this method for buildings that should produce items from mineable resources
     /// </summary>
-    public void SetMineable(Mineable mineable)
+    public void SetMineables(List<Mineable> mineables)
     {
-        this.mineable = mineable;
+        this.mineables = new Mineable[mineables.Count];
+        mineables.CopyTo(this.mineables);
     }
 
     public float GetRemainingTime()
     {
-        if(mineable != null)
+        if(currentMineable < mineables.Length)
         {
-            return mineable.miningTime;
+            return mineables[currentMineable].miningTime;
         }
         else if(recipe != null)
         {
