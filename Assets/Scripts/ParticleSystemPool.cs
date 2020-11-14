@@ -4,8 +4,29 @@ using UnityEngine;
 
 public class ParticleSystemPool : MonoBehaviour
 {
-    [SerializeField] ParticleSystem explosion = null;
-    ParticleSystem.EmitParams explosionParams = new ParticleSystem.EmitParams();
+    public enum ParticleType
+    {
+        none,
+        smallExplosion,
+        mediumExplosion,
+        iceCrystal,
+        poisonCloud,
+        wood,
+        leaf,
+        grass,
+        dust,
+        blood
+    }
+
+    [System.Serializable]
+    class ParticleSystemPair {
+        public ParticleType type;
+        public ParticleSystem system;
+    }
+
+    ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
+    [SerializeField] List<ParticleSystemPair> pairList;
+    Dictionary<ParticleType, ParticleSystem> particleSystemDictionary;
     #region Singleton Code
     private static ParticleSystemPool instance;
     public static ParticleSystemPool Instance
@@ -30,9 +51,26 @@ public class ParticleSystemPool : MonoBehaviour
     }
     #endregion
 
-    public void EmitExplosion(Vector2 location)
+    public void Start()
     {
-        explosionParams.position = location;
-        explosion.Emit(explosionParams, 1);
+        particleSystemDictionary = new Dictionary<ParticleType, ParticleSystem>();
+        foreach(ParticleSystemPair pair in pairList)
+        {
+            particleSystemDictionary[pair.type] = pair.system;
+        }
+    }
+
+    public void EmitParticle(ParticleType type, Vector2 location, int quantity)
+    {
+        if(quantity <= 0)
+        {
+            return;
+        }
+        if(type == ParticleType.none)
+        {
+            return;
+        }
+        emitParams.position = location;
+        particleSystemDictionary[type].Emit(emitParams, quantity);
     }
 }

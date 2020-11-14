@@ -13,14 +13,20 @@ public class ThrownItem : MonoBehaviour
     [SerializeField] int damageLength = 1;
     [SerializeField] Health.DamageType damageType = Health.DamageType.Explosion;
     [SerializeField] LayerMask layermask;
+    [SerializeField] ParticleSystemPool.ParticleType particleAtLanding = ParticleSystemPool.ParticleType.none;
+    [SerializeField] ParticleSystemPool.ParticleType particleAtDamagable = ParticleSystemPool.ParticleType.none;
+    [SerializeField] int particleQuantityPerTick = 1;
+    [SerializeField] int particleQuantityPerTickAtDamagable = 1;
+    [SerializeField] int decrementParticleQuantityAtDamagable = 1;
     ContactFilter2D filter = new ContactFilter2D();
     ThrownState thrownState = ThrownState.Moving;
     [SerializeField] float thrownVelocity = 0.25f;
+    [SerializeField] float angularVelocity = 15.0f;
     Vector3 target;
     List<Collider2D> damageList = new List<Collider2D>(10);
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         switch (thrownState) {
             case ThrownState.Moving:    
@@ -33,6 +39,7 @@ public class ThrownItem : MonoBehaviour
                     this.GetComponent<SpriteRenderer>().enabled = false;
                 }
                 this.transform.position += (target - this.transform.position).normalized * thrownVelocity;
+                this.transform.eulerAngles = (new Vector3(0, 0, this.transform.rotation.eulerAngles.z + angularVelocity));
                 break;
             case ThrownState.Landed:
                 //get objects to damage
@@ -44,14 +51,16 @@ public class ThrownItem : MonoBehaviour
                     if(damageList[i].gameObject.TryGetComponent(out health))
                     {
                         health.DealDamage(damage, damageType);
+                        ParticleSystemPool.Instance.EmitParticle(particleAtDamagable, damageList[i].transform.position, particleQuantityPerTickAtDamagable);
                     }
                 }
-                ParticleSystemPool.Instance.EmitExplosion(this.transform.position);
+                ParticleSystemPool.Instance.EmitParticle(particleAtLanding, this.transform.position, particleQuantityPerTick);
                 damageLength--;
                 if(damageLength <= 0)
                 {
                     Destroy(this);
                 }
+                particleQuantityPerTickAtDamagable -= decrementParticleQuantityAtDamagable;
                 break;
         }
     }

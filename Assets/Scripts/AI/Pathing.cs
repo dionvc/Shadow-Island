@@ -226,7 +226,7 @@ public class Pathing : MonoBehaviour
         }
         return distToObstacle[x][y] >= agentSize;
     }
-
+    /*
     private void OnDrawGizmos()
     {
         for(int i = 0; i < 96; i++)
@@ -239,4 +239,5 @@ public class Pathing : MonoBehaviour
             }
         }
     }
+    */
 }

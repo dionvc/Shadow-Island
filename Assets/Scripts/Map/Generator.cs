@@ -5,6 +5,203 @@ using UnityEngine.Tilemaps;
 
 public class Generator : MonoBehaviour
 {
+    public struct LandNode
+    {
+        public enum LandNodeType
+        {
+            topLeftCorner = 0,
+            top = 1,
+            topRightCorner = 2,
+
+            left = 3,
+            fill = 4,
+            right = 5,
+
+            bottomLeftCorner = 6,
+            bottom = 7,
+            bottomRightCorner = 8,
+
+            bottomLeftInsideCorner = 9,
+            topLeftInsideCorner = 10,
+            bottomRightInsideCorner = 11,
+            topRightInsideCorner = 12,
+            empty = 13
+        }
+        public LandNodeType landNodeType;
+        public float topLeft;
+        public float top;
+        public float topRight;
+        public float left;
+        public float right;
+        public float bottomLeft;
+        public float bottom;
+        public float bottomRight;
+        public float center;
+        public LandNode(int topLeftTile, int topTile, int topRightTile, int leftTile, int rightTile, int bottomLeftTile, int bottomTile, int bottomRightTile)
+        {
+            #region corners
+            if (topLeftTile == 0 || topTile == 0 || leftTile == 0)
+            {
+                topLeft = 0;
+            }
+            else
+            {
+                topLeft = 1;
+            }
+            if (topRightTile == 0 || topTile == 0 || rightTile == 0)
+            {
+                topRight = 0;
+            }
+            else
+            {
+                topRight = 1;
+            }
+            if (bottomLeftTile == 0 || bottomTile == 0 || leftTile == 0)
+            {
+                bottomLeft = 0;
+            }
+            else
+            {
+                bottomLeft = 1;
+            }
+            if (bottomRightTile == 0 || bottomTile == 0 || rightTile == 0)
+            {
+                bottomRight = 0;
+            }
+            else
+            {
+                bottomRight = 1;
+            }
+            #endregion corners
+            #region mids
+            if(topLeft == 0 || topRight == 0)
+            {
+                top = 0.5f * topTile;
+            }
+            else
+            {
+                top = topTile;
+            }
+
+            if(bottomLeft == 0 || bottomRight == 0)
+            {
+                bottom = 0.5f * bottomTile;
+            }
+            else
+            {
+                bottom = bottomTile;
+            }
+
+            if(bottomLeft == 0 || topLeft == 0)
+            {
+                left = 0.5f * leftTile;
+            }
+            else
+            {
+                left = leftTile;
+            }
+
+            if(bottomRight == 0 || topRight == 0)
+            {
+                right = 0.5f * rightTile;
+            }
+            else
+            {
+                right = rightTile;
+            }
+
+            center = (top + bottom + left + right) / 4.0f;
+            #endregion mids
+
+            #region type determination
+            if(topLeftTile == 1 && topTile == 1 && topRightTile == 1 && 
+                leftTile == 1 && rightTile == 1 && 
+                bottomLeftTile == 1 && bottomTile == 1 && bottomRightTile == 1)
+            {
+                landNodeType = LandNodeType.fill;
+            }
+            else if(topLeftTile == 0 && topTile == 0 && topRightTile == 0 &&
+                leftTile == 0 && rightTile == 0 &&
+                bottomLeftTile == 0 && bottomTile == 0 && bottomRightTile == 0)
+            {
+                landNodeType = LandNodeType.empty;
+            }
+            else if (topTile == 1 &&
+                leftTile == 0 && rightTile == 1 &&
+                bottomTile == 1)
+            {
+                landNodeType = LandNodeType.left;
+            }
+            else if (topTile == 1 &&
+                leftTile == 1 && rightTile == 0 &&
+                bottomTile == 1)
+            {
+                landNodeType = LandNodeType.right;
+            }
+            else if (topTile == 0 &&
+                leftTile == 1 && rightTile == 1 &&
+                bottomTile == 1)
+            {
+                landNodeType = LandNodeType.top;
+            }
+            else if (topTile == 1 &&
+                leftTile == 1 && rightTile == 1 &&
+                bottomTile == 0)
+            {
+                landNodeType = LandNodeType.bottom;
+            }
+            else if (topLeftTile == 0 && topTile == 0 &&
+                leftTile == 0 && rightTile == 1 &&
+                bottomTile == 1)
+            {
+                landNodeType = LandNodeType.topLeftCorner;
+            }
+            else if (topTile == 0 && topRightTile == 0 &&
+                leftTile == 1 && rightTile == 0 &&
+                bottomTile == 1)
+            {
+                landNodeType = LandNodeType.topRightCorner;
+            }
+            else if (topTile == 1 &&
+                leftTile == 0 && rightTile == 1 &&
+                bottomLeftTile == 0 && bottomTile == 0)
+            {
+                landNodeType = LandNodeType.bottomLeftCorner;
+            }
+            else if (topTile == 1 &&
+                leftTile == 1 && rightTile == 0 &&
+                 bottomTile == 0 && bottomRightTile == 0)
+            {
+                landNodeType = LandNodeType.bottomRightCorner;
+            }
+            else if (bottomLeftTile == 0 &&
+                leftTile == 1 &&
+                 bottomTile == 1)
+            {
+                landNodeType = LandNodeType.bottomLeftInsideCorner;
+            }
+            else if (rightTile == 1 &&
+                 bottomTile == 1 && bottomRightTile == 0)
+            {
+                landNodeType = LandNodeType.bottomRightInsideCorner;
+            }
+            else if (topTile == 1 &&
+                leftTile == 1 && topLeftTile == 0)
+            {
+                landNodeType = LandNodeType.topLeftInsideCorner;
+            }
+            else if (topTile == 1 &&
+                rightTile == 1 && topRightTile == 0)
+            {
+                landNodeType = LandNodeType.topRightInsideCorner;
+            }
+            else
+            {
+                landNodeType = LandNodeType.empty;
+            }
+            #endregion type determination
+        }
+    }
     [SerializeField] Grid tileGrid;
     [SerializeField] Tilemap[] maps;
     [SerializeField] RuleTile[] tiles;
@@ -13,13 +210,19 @@ public class Generator : MonoBehaviour
     [SerializeField] Tile tallGrass;
     [SerializeField] Tilemap tallGrassMap;
     float seed = 0;
-    public int sizeX = 12;
-    public int sizeY = 12;
+    int[][] isLand;
+    LandNode[][] landNodes;
+    [SerializeField] public int sizeX { get; private set; } = 24;
+    [SerializeField] public int sizeY { get; private set; } = 24;
 
     // Start is called before the first frame update
 
-    void Start()
+    public void GenerateIsland()
     {
+        if (isLand == null)
+        {
+            GenerateIslandShape(12);
+        }
         seed = Random.value;
         for (int x = 0; x < sizeX; x++)
         {
@@ -32,6 +235,74 @@ public class Generator : MonoBehaviour
         CoverEdges();
         GenerateGrass();
         InitializePathing();
+    }
+
+    public void GenerateIslandShape(int solveIterations)
+    {
+        //Intialize Array
+        isLand = new int[sizeX][];
+        for(int i = 0; i < sizeX; i++)
+        {
+            isLand[i] = new int[sizeY];
+        }
+        //Seed array
+        for(int i = 1; i < sizeX - 1; i++)
+        {
+            for(int j = 1; j < sizeY - 1; j++)
+            {
+                if(Random.value > 0.425f)
+                {
+                    isLand[i][j] = 1;
+                }
+                else
+                {
+                    isLand[i][j] = 0;
+                }
+            }
+        }
+        for (int solve = 0; solve < solveIterations; solve++)
+        {
+            for (int i = 1; i < sizeX - 1; i++)
+            {
+                for (int j = 1; j < sizeY - 1; j++)
+                {
+                    if(isLand[i][j] == 0)
+                    {
+                        if(isLand[i - 1][j - 1] + isLand[i - 1][j] + isLand[i - 1][j + 1] +
+                            isLand[i + 1][j - 1] + isLand[i + 1][j] + isLand[i + 1][j + 1] +
+                            isLand[i][j - 1] + isLand[i][j + 1] >= 5)
+                        {
+                            isLand[i][j] = 1;
+                        }
+                    }
+                    else
+                    {
+                        if(isLand[i - 1][j - 1] + isLand[i - 1][j] + isLand[i - 1][j + 1] +
+                            isLand[i + 1][j - 1] + isLand[i + 1][j] + isLand[i + 1][j + 1] +
+                            isLand[i][j - 1] + isLand[i][j + 1] <= 3)
+                        {
+                            isLand[i][j] = 0;
+                        }
+                    }
+                }
+            }
+        }
+        landNodes = new LandNode[sizeX][];
+        for(int i = 0; i < sizeX; i++)
+        {
+            landNodes[i] = new LandNode[sizeY];
+            for(int j = 0; j < sizeY; j++)
+            {
+                if (i != 0 && j != 0 && isLand[i][j] != 0)
+                {
+                    landNodes[i][j] = new LandNode(isLand[i - 1][j + 1], isLand[i][j + 1], isLand[i + 1][j + 1], isLand[i - 1][j], isLand[i + 1][j], isLand[i - 1][j - 1], isLand[i][j - 1], isLand[i + 1][j - 1]);
+                }
+                else
+                {
+                    landNodes[i][j] = new LandNode(0, 0, 0, 0, 0, 0, 0, 0);
+                }
+            }
+        }
     }
 
     void GenerateCliffs(int x, int y)
@@ -66,7 +337,7 @@ public class Generator : MonoBehaviour
         {
             for (int j = 0; j < 32; j++)
             {
-                int num = (int)SamplePerlin(x, y, i, j);
+                int num = (int)SamplePerlinLerp(x, y, i, j);
                 maps[num].SetTile(new Vector3Int(x * 32 + i, y * 32 + j, 0), tiles[num]);
             }
         }
@@ -168,7 +439,7 @@ public class Generator : MonoBehaviour
                 locations[6] = new Vector3Int(i + 1, j - 1, 0);
                 locations[7] = new Vector3Int(i + 1, j, 0);
                 locations[8] = new Vector3Int(i + 1, j + 1, 0);
-                float perlin = SamplePerlin(i / 32, j / 32, i % 32, j % 32);
+                float perlin = SamplePerlinLerp(i / 32, j / 32, i % 32, j % 32);
                 if (!cliffMap.HasTile(locations[4]) && GetNeighborsCount(maps[3], locations) == 9 && !maps[4].HasTile(locations[4])
                     && perlin < 3.6 && perlin > 3.2)
                 {
@@ -209,81 +480,64 @@ public class Generator : MonoBehaviour
         }
         return neighbors;
     }
-
+    
     /// <summary>
-    /// Returns a float between 0 and the number of tile variants
+    /// 
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <param name="i"></param>
     /// <param name="j"></param>
     /// <returns></returns>
-    public float SamplePerlin(int x, int y, int i, int j)
+    public float SamplePerlinLerp(int x, int y, int i, int j)
     {
-        if (x == 0 || y == 0 || x == sizeX - 1 || y == sizeY - 1)
+        //wat da hell why can't i find a better way
+        if (x < 0 || y < 0 || x >= sizeX || y >= sizeY || isLand[x][y] == 0)
         {
             return 0;
         }
-        int x0 = 0;
-        int y0 = 0;
-        int yM = 0;
-        int xM = 0;
-        int xy0 = 0;
-        int x0yM = 0;
-        int xMy0 = 0;
-        int xMyM = 0;
-        int xyR = 0;
-        if (x == 1 && y == 1)
+        float factor = 1;
+        LandNode node = landNodes[x][y];
+        //Split into quadrants
+        if(i < 16 && j < 16)
         {
-            xy0 = 1;
+            //bottom left
+            factor = 0.5f * (j / 15.0f) *                   Mathf.Lerp(node.left, node.center, i / 15.0f) + //Lerp from left to center
+                     0.5f * (1 - (j / 15.0f)) *             Mathf.Lerp(node.bottomLeft, node.bottom, i / 15.0f) + //Lerp from bottomLeft to bottom
+                     0.5f * (i / 15.0f) *                   Mathf.Lerp(node.bottom, node.center, j / 15.0f) + //Lerp from bottom to center
+                     0.5f * (1 - (i / 15.0f)) *             Mathf.Lerp(node.bottomLeft, node.left, j / 15.0f); //Lerp from bottomLeft to left
         }
-        else if (x == 1 && y == sizeY - 2)
+        else if(i >= 16 && j < 16)
         {
-            x0yM = 1;
+            //Bottom right
+            factor = 0.5f * (j / 15.0f) *                   Mathf.Lerp(node.center, node.right, (i - 16.0f) / 15.0f) + //lerp from center to right
+                     0.5f * (1 - (j / 15.0f)) *             Mathf.Lerp(node.bottom, node.bottomRight, (i - 16.0f) / 15.0f) + //Lerp from bottom to right
+                     0.5f * ((i - 16.0f) / 15.0f) *         Mathf.Lerp(node.bottomRight, node.right, j / 15.0f) + //Lerp from bottom to center
+                     0.5f * (1 - ((i - 16.0f) / 15.0f)) *   Mathf.Lerp(node.bottom, node.center, j / 15.0f); //Lerp from bottomLeft to left
         }
-        else if (x == sizeX - 2 && y == 1)
+        else if(i < 16 && j >= 16)
         {
-            xMy0 = 1;
-        }
-        else if (x == sizeX - 2 && y == sizeY - 2)
-        {
-            xMyM = 1;
-        }
-        else if (x == 1)
-        {
-            x0 = 1;
-        }
-        else if (y == 1)
-        {
-            y0 = 1;
-        }
-        else if (x == sizeX - 2)
-        {
-            xM = 1;
-        }
-        else if (y == sizeY - 2)
-        {
-            yM = 1;
+            //Top left
+            factor = 0.5f * ((j - 16.0f) / 15.0f) *         Mathf.Lerp(node.topLeft, node.top, i / 15.0f) + //Lerp from topLeft to top
+                     0.5f * (1 - ((j - 16.0f) / 15.0f)) *   Mathf.Lerp(node.left, node.center, i / 15.0f) + //Lerp from left to center
+                     0.5f * (i / 15.0f) *                   Mathf.Lerp(node.center, node.top, (j - 16.0f) / 15.0f) + //Lerp from center to top
+                     0.5f * (1 - (i / 15.0f)) *             Mathf.Lerp(node.left, node.topLeft, (j - 16.0f) / 15.0f); //Lerp from left to topleft
         }
         else
         {
-            xyR = 1;
+            //Top right
+            factor = 0.5f * ((j - 16.0f) / 15.0f) *         Mathf.Lerp(node.top, node.topRight, (i - 16.0f) / 15.0f) + //Lerp from top to topRight
+                     0.5f * (1 - ((j - 16.0f) / 15.0f)) *   Mathf.Lerp(node.center, node.right, (i - 16.0f) / 15.0f) + //Lerp from center to right
+                     0.5f * ((i - 16.0f) / 15.0f) *         Mathf.Lerp(node.right, node.topRight, (j - 16.0f) / 15.0f) + //Lerp from right to topRight
+                     0.5f * (1 - ((i - 16.0f) / 15.0f)) *   Mathf.Lerp(node.center, node.top, (j - 16.0f) / 15.0f); //Lerp from center to top
         }
-        float perlin = Mathf.Clamp(0.33f * Mathf.PerlinNoise(((x * 32 + i) / 4.0f) + seed, ((y * 32 + j) / 4.0f) + seed) + 0.67f * Mathf.PerlinNoise(((x * 32 + i) / 8.0f) + seed, ((y * 32 + j) / 8.0f) + seed), 0, 0.99f);
-        perlin = Mathf.Pow(perlin, 0.5f);
-        float num = ((maps.Length) * perlin *
-                        (
-                        Mathf.Clamp(
-                            x0 * (i / 18.0f) + y0 * (j / 18.0f) + xM * ((31 - i) / 18.0f) + yM * ((31 - j) / 18.0f) +
-                            xy0 * (3 * (i * j) / (2 * 961.0f)) +
-                            x0yM * (3 * (i * (31 - j) / (2 * 961.0f))) +
-                            xMy0 * (3 * ((31 - i) * j / (2 * 961.0f))) +
-                            xMyM * (3 * ((31 - i) * (31 - j) / (2 * 961.0f))) +
-                            xyR
-                            , 0, 0.99f)
-                        ));
-        return num;
+
+        float perlin = Mathf.Clamp(0.33f * Mathf.PerlinNoise(((x * 32 + i) / 2.0f) + seed, ((y * 32 + j) / 2.0f) + seed) + 0.67f * Mathf.PerlinNoise(((x * 32 + i) / 4.0f) + seed, ((y * 32 + j) / 4.0f) + seed), 0, 0.99f);
+        perlin = Mathf.Pow(perlin, 0.55f);
+        return Mathf.Clamp01(factor) * maps.Length * perlin;
     }
+    
+    
 
     /// <summary>
     /// Initializes the pathing grid with unwalkable areas according to generated map
@@ -303,5 +557,20 @@ public class Generator : MonoBehaviour
             }
         }
         Pathing.Instance.CalculatePathablity(sizeX * 32, sizeY * 32);
+    }
+
+    public LandNode GetLandNode(int x, int y)
+    {
+        return landNodes[x][y];
+    }
+
+    public void SetWidth(int sizeX)
+    {
+        this.sizeX = sizeX;
+    }
+
+    public void SetHeight(int sizeY)
+    {
+        this.sizeY = sizeY;
     }
 }

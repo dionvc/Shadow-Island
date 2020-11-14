@@ -34,7 +34,7 @@ public class GeneratorObjects : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    public void GenerateObjects()
     {
         generateDelay++;
         if (generateDelay == 60) {
@@ -66,7 +66,7 @@ public class GeneratorObjects : MonoBehaviour
                 int index = -1;
                 for (int i = 0; i < trees.Count; i++)
                 {
-                    float value = Mathf.Abs(treeValues[i] - generator.SamplePerlin((int)rounded.x / 32, (int)rounded.y / 32, (int)rounded.x % 32, (int) rounded.y % 32));
+                    float value = Mathf.Abs(treeValues[i] - generator.SamplePerlinLerp((int)rounded.x / 32, (int)rounded.y / 32, (int)rounded.x % 32, (int) rounded.y % 32));
                     if (value < min)
                     {
                         min = value;
@@ -129,7 +129,7 @@ public class GeneratorObjects : MonoBehaviour
     private int SamplePerlinOreAmount(int index, int x, int y, int sizeX, int sizeY, float perlinValue)
     {
         float diff = perlinValue - oreValues[index];
-        int amount = (int) (diff * 100);
-        return (amount * amount) + 1;
+        int amount = (int) (diff * 500);
+        return (int)Mathf.Pow(amount, 1.5f) + 1;
     }
 }
