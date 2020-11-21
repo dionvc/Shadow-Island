@@ -212,8 +212,10 @@ public class Generator : MonoBehaviour
     float seed = 0;
     int[][] isLand;
     LandNode[][] landNodes;
-    [SerializeField] public int sizeX { get; private set; } = 24;
-    [SerializeField] public int sizeY { get; private set; } = 24;
+    [SerializeField] public int sizeX { get; private set; } = 12;
+    [SerializeField] public int sizeY { get; private set; } = 12;
+    public float progress = 0.0f;
+    public float colliderProgress = 0.0f;
 
     // Start is called before the first frame update
 
@@ -223,6 +225,11 @@ public class Generator : MonoBehaviour
         {
             GenerateIslandShape(12);
         }
+        StartCoroutine("GenerateChunks");
+    }
+
+    IEnumerator GenerateChunks()
+    {
         seed = Random.value;
         for (int x = 0; x < sizeX; x++)
         {
@@ -230,11 +237,18 @@ public class Generator : MonoBehaviour
             {
                 GenerateTerrain(x, y);
                 GenerateCliffs(x, y);
+                progress = (x * sizeX + y) / (sizeX * sizeY + 3.0f);
+                yield return new WaitForFixedUpdate();
             }
         }
         CoverEdges();
+        progress = (sizeX * sizeY + 1.0f) / (sizeX * sizeY + 3.0f);
+        yield return new WaitForFixedUpdate();
+        progress = (sizeX * sizeY + 2.0f) / (sizeX * sizeY + 3.0f);
         GenerateGrass();
-        InitializePathing();
+        yield return new WaitForFixedUpdate();
+        progress = 1.0f;
+        yield break;
     }
 
     public void GenerateIslandShape(int solveIterations)
@@ -542,7 +556,7 @@ public class Generator : MonoBehaviour
     /// <summary>
     /// Initializes the pathing grid with unwalkable areas according to generated map
     /// </summary>
-    private void InitializePathing()
+    public void InitializePathing()
     {
         Pathing.Instance.InitializePathingGrid(sizeX * 32, sizeY * 32);
         for(int i = 0; i < sizeX * 32; i++)
@@ -572,5 +586,44 @@ public class Generator : MonoBehaviour
     public void SetHeight(int sizeY)
     {
         this.sizeY = sizeY;
+    }
+
+    public void GenerateColliders()
+    {
+        TilemapCollider2D[] colliders = this.gameObject.GetComponentsInChildren<TilemapCollider2D>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
+        }
+        StartCoroutine("BuildCompositeColliders");
+    }
+
+    IEnumerator BuildCompositeColliders()
+    {
+
+        CompositeCollider2D[] colliders = this.gameObject.GetComponentsInChildren<CompositeCollider2D>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].GenerateGeometry();
+            colliders[i].generationType = CompositeCollider2D.GenerationType.Synchronous;
+            colliderProgress = (i * 1.0f) / (i + 1);
+            yield return new WaitForFixedUpdate();
+        }
+        colliderProgress = 1.0f;
+        yield break;
+    }
+
+    public void DisableColliders()
+    {
+        CompositeCollider2D[] compositeColliders = this.gameObject.GetComponentsInChildren<CompositeCollider2D>();
+        TilemapCollider2D[] colliders = this.gameObject.GetComponentsInChildren<TilemapCollider2D>();
+        for (int i = 0; i < compositeColliders.Length; i++)
+        {
+            compositeColliders[i].generationType = CompositeCollider2D.GenerationType.Manual;
+        }
+        for(int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = false;
+        }
     }
 }

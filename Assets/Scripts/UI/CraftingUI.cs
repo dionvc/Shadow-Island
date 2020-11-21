@@ -7,7 +7,7 @@ using TMPro;
 public class CraftingUI : MonoBehaviour
 {
     [SerializeField] GameObject craftingSlot;
-    [SerializeField] Inventory inventory;
+    Inventory inventory;
     [SerializeField] MenuSlideOut menuToHideOnRecipeSelect = null;
     List<GameObject> craftingSlots;
     // Start is called before the first frame update

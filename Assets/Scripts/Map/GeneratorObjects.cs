@@ -36,72 +36,68 @@ public class GeneratorObjects : MonoBehaviour
     // Update is called once per frame
     public void GenerateObjects()
     {
-        generateDelay++;
-        if (generateDelay == 60) {
-
-            for (int x = 0; x < generator.sizeX * 32; x++)
+        for (int x = 0; x < generator.sizeX * 32; x++)
+        {
+            for (int y = 0; y < generator.sizeY * 32; y++)
             {
-                for (int y = 0; y < generator.sizeY * 32; y++)
+                for (int i = 0; i < ores.Count; i++)
                 {
-                    for (int i = 0; i < ores.Count; i++)
+                    float perlinValue = SamplePerlinOre(i, x, y, generator.sizeX, generator.sizeY);
+                    if (!cliff.HasTile(new Vector3Int(x,y,0)) && !water.HasTile(new Vector3Int(x,y,0)) && perlinValue > oreValues[i])
                     {
-                        float perlinValue = SamplePerlinOre(i, x, y, generator.sizeX, generator.sizeY);
-                        if (!cliff.HasTile(new Vector3Int(x,y,0)) && !water.HasTile(new Vector3Int(x,y,0)) && perlinValue > oreValues[i])
-                        {
-                            GameObject ore = Instantiate(ores[i], new Vector2(x + 0.5f, y + 0.5f), Quaternion.identity);
-                            ore.GetComponent<Mineable>().SetAmount(SamplePerlinOreAmount(i, x, y, generator.sizeX, generator.sizeY, perlinValue));
-                            break;
-                        }
+                        GameObject ore = Instantiate(ores[i], new Vector2(x + 0.5f, y + 0.5f), Quaternion.identity);
+                        ore.GetComponent<Mineable>().SetAmount(SamplePerlinOreAmount(i, x, y, generator.sizeX, generator.sizeY, perlinValue));
+                        break;
                     }
+                }
 
-                }
             }
-
-            PoissonDiscSampler treeSampler = new PoissonDiscSampler(generator.sizeX * 32, generator.sizeY * 32, treeDensity);
-            IEnumerable<Vector2> treeSamples = treeSampler.Samples();
-            foreach (Vector2 sample in treeSamples)
-            {
-                Vector2 rounded = new Vector2Int((int)Mathf.Round(sample.x), (int)Mathf.Round(sample.y));
-                float min = 1.0f;
-                int index = -1;
-                for (int i = 0; i < trees.Count; i++)
-                {
-                    float value = Mathf.Abs(treeValues[i] - generator.SamplePerlinLerp((int)rounded.x / 32, (int)rounded.y / 32, (int)rounded.x % 32, (int) rounded.y % 32));
-                    if (value < min)
-                    {
-                        min = value;
-                        index = i;
-                    }
-                }
-                if (index != -1)
-                {
-                    BoxCollider2D collider = trees[index].GetComponent<BoxCollider2D>();
-                    rounded = (Vector3)grid.WorldToCell(rounded);
-                    Vector2 offset = new Vector2(0, 0);
-                    Vector3 size = new Vector3(Mathf.Ceil(collider.size.x), Mathf.Ceil(collider.size.y));
-                    if (Mathf.Round(size.x) % 2 != 0)
-                    {
-                        offset.x = 0.5f;
-                    }
-                    if (Mathf.Round(size.y) % 2 != 0)
-                    {
-                        offset.y = 0.5f;
-                    }
-                    if (Physics2D.OverlapBox(rounded + collider.offset - offset, size, 0.0f, filter, colliders) == 0)
-                    {
-                        if (min < 0.15)
-                        {
-                            Instantiate(trees[index], rounded + collider.offset - offset, Quaternion.identity);
-                        }
-                        else if (min < 0.3)
-                        {
-                            Instantiate(deadTrees[index], rounded + collider.offset - offset, Quaternion.identity);
-                        }
-                    }
-                }
-            }
-            this.enabled = false;
         }
+
+        PoissonDiscSampler treeSampler = new PoissonDiscSampler(generator.sizeX * 32, generator.sizeY * 32, treeDensity);
+        IEnumerable<Vector2> treeSamples = treeSampler.Samples();
+        foreach (Vector2 sample in treeSamples)
+        {
+            Vector2 rounded = new Vector2Int((int)Mathf.Round(sample.x), (int)Mathf.Round(sample.y));
+            float min = 1.0f;
+            int index = -1;
+            for (int i = 0; i < trees.Count; i++)
+            {
+                float value = Mathf.Abs(treeValues[i] - generator.SamplePerlinLerp((int)rounded.x / 32, (int)rounded.y / 32, (int)rounded.x % 32, (int) rounded.y % 32));
+                if (value < min)
+                {
+                    min = value;
+                    index = i;
+                }
+            }
+            if (index != -1)
+            {
+                BoxCollider2D collider = trees[index].GetComponent<BoxCollider2D>();
+                rounded = (Vector3)grid.WorldToCell(rounded);
+                Vector2 offset = new Vector2(0, 0);
+                Vector3 size = new Vector3(Mathf.Ceil(collider.size.x), Mathf.Ceil(collider.size.y));
+                if (Mathf.Round(size.x) % 2 != 0)
+                {
+                    offset.x = 0.5f;
+                }
+                if (Mathf.Round(size.y) % 2 != 0)
+                {
+                    offset.y = 0.5f;
+                }
+                if (Physics2D.OverlapBox(rounded + collider.offset - offset, size, 0.0f, filter, colliders) == 0)
+                {
+                    if (min < 0.15)
+                    {
+                        Instantiate(trees[index], rounded + collider.offset - offset, Quaternion.identity);
+                    }
+                    else if (min < 0.3)
+                    {
+                        Instantiate(deadTrees[index], rounded + collider.offset - offset, Quaternion.identity);
+                    }
+                }
+            }
+        }
+        this.enabled = false;
     }
 
     private float SamplePerlinOre(int index, int x, int y, int sizeX, int sizeY)

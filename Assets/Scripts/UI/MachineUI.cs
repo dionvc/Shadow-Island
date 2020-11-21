@@ -206,4 +206,9 @@ public class MachineUI : MonoBehaviour
         }
         inventorySlot.GetComponent<InventorySlot>().slotID = slotID;
     }
+
+    public void SetMouseInventory(Inventory mouseInventory)
+    {
+        this.mouseInventory = mouseInventory;
+    }
 }

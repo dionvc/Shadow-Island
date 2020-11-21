@@ -6,12 +6,7 @@ using TMPro;
 
 public class InventoryMouse : MonoBehaviour
 {
-    [SerializeField] Inventory inventory = null;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    Inventory inventory = null;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -28,5 +23,10 @@ public class InventoryMouse : MonoBehaviour
             GetComponent<Image>().enabled = false;
             GetComponentInChildren<TMP_Text>().SetText("");
         }
+    }
+
+    public void SetInventory(Inventory inventory)
+    {
+        this.inventory = inventory;
     }
 }

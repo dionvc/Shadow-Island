@@ -7,8 +7,8 @@ using System.Collections.ObjectModel;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] Inventory inventory = null;
-    [SerializeField] Inventory mouseInventory = null;
+    Inventory inventory = null;
+    Inventory mouseInventory = null;
     [SerializeField] GameObject inventorySlot = null;
     [SerializeField] MenuSlideOut closeWhenNull = null;
     List<GameObject> itemSlots;
@@ -90,5 +90,10 @@ public class InventoryUI : MonoBehaviour
                 closeWhenNull.TogglePanel(MenuSlideOut.PanelState.panelOut);
             }
         }
+    }
+
+    public void SetMouseInventory(Inventory mouseInventory)
+    {
+        this.mouseInventory = mouseInventory;
     }
 }

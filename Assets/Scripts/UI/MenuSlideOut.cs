@@ -12,8 +12,9 @@ public class MenuSlideOut : MonoBehaviour
     }
     [SerializeField] Vector3 outTarget;
     [SerializeField] Vector3 inTarget;
-    [SerializeField] KeyCode slideOutKey = KeyCode.None;
+    [SerializeField] string slideOutKey = null;
     [SerializeField] MenuSlideOut[] otherMenusToHide = null;
+    [SerializeField] bool popOutOnStart = false;
     RectTransform panelTransform;
     PanelState panelState = PanelState.panelIn;
     Vector3 currentTarget;
@@ -25,6 +26,10 @@ public class MenuSlideOut : MonoBehaviour
     void Start()
     {
         panelTransform = GetComponent<RectTransform>();
+        if(popOutOnStart)
+        {
+            this.TogglePanel(PanelState.panelOut);
+        }
     }
     IEnumerator Slide()
     {
@@ -42,7 +47,7 @@ public class MenuSlideOut : MonoBehaviour
 
     public void Update()
     {
-        if(slideOutKey != KeyCode.None && Input.GetKeyDown(slideOutKey))
+        if(slideOutKey != null && slideOutKey != "" && Input.GetKeyDown(PlayerData.Instance.keybinds[slideOutKey]))
         {
             TogglePanel();
         }
@@ -72,7 +77,7 @@ public class MenuSlideOut : MonoBehaviour
 
     public void TogglePanel(PanelState state)
     {
-        if(state == panelState)
+        if(state == panelState || panelTransform == null)
         {
             return;
         }

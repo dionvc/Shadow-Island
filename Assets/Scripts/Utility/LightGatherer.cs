@@ -24,7 +24,6 @@ public class LightGatherer : MonoBehaviour
         filter.useDepth = false;
         filter.useTriggers = true;
         results = new List<Collider2D>();
-        Debug.Log(renderers[0].bounds);
         renderers[0].allowOcclusionWhenDynamic = false;
     }
 

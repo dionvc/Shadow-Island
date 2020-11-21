@@ -3,18 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIMapGenerator : MonoBehaviour
 {
+    //Really important things (not sure if its best to have a UI script handling this, but \_(._.)_/ )
     [SerializeField] GameObject mapObjectPrefab = null;
+    [SerializeField] GameObject playerPrefab = null;
+
+    //Actual UI stuff
     [SerializeField] GameObject previewTilePrefab = null;
+    [SerializeField] GameObject mapPreviewSelectionPrefab = null;
     [SerializeField] GameObject previewPane = null;
+    [SerializeField] Button playButton = null;
+    [SerializeField] GameObject loadingPanel = null;
+    [SerializeField] Image loadingPanelBar = null;
+    [SerializeField] GameObject parentCanvas = null;
     GameObject mapObjectInstance = null;
+    GameObject mapPreviewSelection = null;
     Generator generator;
     int xSizeBuffer = 24;
     int ySizeBuffer = 24;
+    int density = 12;
+    int startingX = -1;
+    int startingY = -1;
     [SerializeField] Sprite[] previewImages = null;
+    [SerializeField] Sprite[] fillVariants = null;
+    [SerializeField] MenuSlideOut[] menusToHideOnStart;
     List<GameObject> previewTiles = null;
+    AsyncOperation loading = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +39,10 @@ public class UIMapGenerator : MonoBehaviour
         DontDestroyOnLoad(mapObjectInstance);
         generator = mapObjectInstance.GetComponent<Generator>();
         previewTiles = new List<GameObject>();
+        playButton.interactable = false;
+        mapPreviewSelection = Instantiate(mapPreviewSelectionPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        mapPreviewSelection.SetActive(false);
+        DontDestroyOnLoad(parentCanvas);
     }
 
     /// <summary>
@@ -29,11 +50,14 @@ public class UIMapGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePreview()
     {
+        startingX = -1;
+        startingY = -1;
+        playButton.interactable = false;
         generator.SetWidth(xSizeBuffer);
         generator.SetHeight(ySizeBuffer);
-        Debug.Log(generator.sizeX);
-        Debug.Log(generator.sizeY);
-        generator.GenerateIslandShape(12);
+        generator.GenerateIslandShape(density);
+        mapPreviewSelection.transform.parent = null;
+        mapPreviewSelection.SetActive(false);
         for(int i = 0; i < previewTiles.Count; i++)
         {
             Destroy(previewTiles[i]);
@@ -43,11 +67,29 @@ public class UIMapGenerator : MonoBehaviour
         {
             for(int j = 0; j < generator.sizeX; j++)
             {
-                previewTiles.Add(Instantiate(previewTilePrefab, previewPane.transform));
-                Debug.Log(i);
-                Debug.Log(j);
-                int imageIndex = (int)generator.GetLandNode(j, generator.sizeY - i - 1).landNodeType;
-                previewTiles[previewTiles.Count - 1].GetComponent<Image>().sprite = previewImages[imageIndex];
+                GameObject tile = Instantiate(previewTilePrefab, previewPane.transform);
+                previewTiles.Add(tile);
+                Generator.LandNode.LandNodeType type = generator.GetLandNode(j, generator.sizeY - i - 1).landNodeType;
+                int imageIndex = (int)type;
+                if (type == Generator.LandNode.LandNodeType.fill)
+                {
+                    previewTiles[previewTiles.Count - 1].GetComponent<Image>().sprite = fillVariants[Random.Range(0, fillVariants.Length)];
+                }
+                else
+                {
+                    previewTiles[previewTiles.Count - 1].GetComponent<Image>().sprite = previewImages[imageIndex];
+                }
+                previewTiles[previewTiles.Count - 1].GetComponent<MapPreviewLocation>().SetXY(j, generator.sizeY - i - 1);
+                Button tileButton = previewTiles[previewTiles.Count - 1].GetComponent<Button>();
+                if (type == Generator.LandNode.LandNodeType.fill)
+                {
+                    tileButton.onClick.AddListener(delegate { SetStartingLocation(tile); });
+                }
+                else
+                {
+                    tileButton.enabled = false;
+                }
+                
             }
         }
         previewPane.GetComponent<GridLayoutGroup>().constraintCount = generator.sizeX;
@@ -63,10 +105,79 @@ public class UIMapGenerator : MonoBehaviour
         ySizeBuffer = (int)sizeY;
     }
 
+    public void SetLandDensity(System.Single landDensity)
+    {
+        density = (int)landDensity;
+    }
+
+    public void SetStartingLocation(GameObject previewMapSlot)
+    {
+        MapPreviewLocation location = previewMapSlot.GetComponent<MapPreviewLocation>();
+        startingX = location.xPos;
+        startingY = location.yPos;
+        mapPreviewSelection.SetActive(true);
+        mapPreviewSelection.transform.parent = previewMapSlot.transform;
+        mapPreviewSelection.transform.localPosition = new Vector3(0, 0, 0);
+        playButton.interactable = true;
+    }
+
     public void StartGame()
     {
-        SceneManager.LoadScene("MainScene");
+        loadingPanel.SetActive(true);
+        for(int i = 0; i < menusToHideOnStart.Length; i++)
+        {
+            menusToHideOnStart[i].TogglePanelOff();
+        }
+        StartCoroutine("Load");
+    }
+
+    /// <summary>
+    /// Basically responsible for getting the game working.  In a UI script.  Whatever.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator Load()
+    {
+        TMP_Text loadingText = loadingPanel.GetComponentInChildren<TMP_Text>();
+        loading = SceneManager.LoadSceneAsync("MainScene");
+        loadingText.SetText("Loading Assets");
+        while (loading.progress < 1.0f)
+        {
+            loadingPanelBar.fillAmount = loading.progress;
+            yield return new WaitForFixedUpdate();
+        }
+        //Generate terrain
+        generator.DisableColliders();
         generator.GenerateIsland();
+        loadingText.SetText("Generating Terrain");
+        while (generator.progress < 1.0f)
+        {
+            loadingPanelBar.fillAmount = generator.progress;
+            yield return new WaitForFixedUpdate();
+        }
+        //Build collison map
+        loadingText.SetText("Generating Colliders");
+        generator.GenerateColliders();
+        while(generator.colliderProgress < 1.0f)
+        {
+            loadingPanelBar.fillAmount = generator.colliderProgress;
+            yield return new WaitForFixedUpdate();
+        }
+        //Initialize Pathing
+        loadingPanel.GetComponentInChildren<TMP_Text>().SetText("Initializing Pathing");
+        loadingPanelBar.fillAmount = 0.33f;
+        generator.InitializePathing();
+        yield return new WaitForFixedUpdate();
+        //Generate ore and trees
+        loadingPanel.GetComponentInChildren<TMP_Text>().SetText("Generating Objects");
+        loadingPanelBar.fillAmount = 0.66f;
         mapObjectInstance.GetComponent<GeneratorObjects>().GenerateObjects();
+        yield return new WaitForFixedUpdate();
+        //Instantiate player
+        loadingPanel.GetComponentInChildren<TMP_Text>().SetText("Finishing Up");
+        loadingPanelBar.fillAmount = 1;
+        Instantiate(playerPrefab, new Vector3(startingX * 32 + 16, startingY * 32 + 16), Quaternion.identity).GetComponent<ObjectInteraction>().SetPlaceGrid(mapObjectInstance.GetComponent<Grid>());
+        yield return new WaitForFixedUpdate();
+        Destroy(parentCanvas);
+        yield break;
     }
 }

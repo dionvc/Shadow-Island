@@ -687,7 +687,7 @@ CompositeCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_GeometryType: 1
-  m_GenerationType: 0
+  m_GenerationType: 1
   m_EdgeRadius: 0
   m_ColliderPaths:
   - m_Collider: {fileID: 8817132982703646095}
@@ -791,6 +791,7 @@ MonoBehaviour:
   cliffTile: {fileID: 11400000, guid: e30673c5b358c4c41a55f51a6104b918, type: 2}
   tallGrass: {fileID: 11400000, guid: ea134529608f1584ca02ff96c9c82223, type: 2}
   tallGrassMap: {fileID: 8817132984604479562}
+  progress: 0
 --- !u!114 &8817132983252528891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,7 +1121,7 @@ CompositeCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_GeometryType: 1
-  m_GenerationType: 0
+  m_GenerationType: 1
   m_EdgeRadius: 0
   m_ColliderPaths:
   - m_Collider: {fileID: 8817132984486933839}

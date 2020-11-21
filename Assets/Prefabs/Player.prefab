@@ -215,7 +215,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3070123dd6c9aae4ba639700231006e0, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -324,18 +324,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088055d32301da1498856149d4be0ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  otherInventoryPanel: {fileID: 0}
-  machinePanel: {fileID: 0}
+  inventoryPanelInteractPrefab: {fileID: 5278575399984312782, guid: 1f71d2c73e9c4fe4bbbf12ccb775d038,
+    type: 3}
+  machinePanelInteractPrefab: {fileID: 4489835596932741458, guid: 848a7b24e2fbe894cacee7de569c1bcc,
+    type: 3}
+  inventoryPanelPrefab: {fileID: 6878678284303653316, guid: bbc9d9e3abb380942a1b2422304b9471,
+    type: 3}
+  craftingPanelPrefab: {fileID: 6807970763894196372, guid: 9f1dcd70d3c0d0240b42f591bdb12754,
+    type: 3}
+  mouseInventoryPrefab: {fileID: 4816623392347423387, guid: 357b40c10ce1c5d45b7ac3c8e2250a38,
+    type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 385
   layerMaskMining:
     serializedVersion: 2
     m_Bits: 385
-  placeGrid: {fileID: 0}
   mouseInventory: {fileID: 7705490271559096078}
-  placeSprite: {fileID: 0}
-  placeSpriteRenderer: {fileID: 0}
+  placeSpritePrefab: {fileID: 74216309571529496, guid: 0ddc1c3607e4bb24ba01718c863c4f43,
+    type: 3}
 --- !u!114 &7705490272239524659
 MonoBehaviour:
   m_ObjectHideFlags: 0
