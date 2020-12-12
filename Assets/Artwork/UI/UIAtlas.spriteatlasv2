@@ -70,6 +70,11 @@ SpriteAtlasAsset:
     - {fileID: 2800000, guid: fdd373a9a524ef248bff22461eb0d021, type: 3}
     - {fileID: 2800000, guid: cdb15fd703e27f446a737fa48626b3bc, type: 3}
     - {fileID: 2800000, guid: 6a14a565c3d6694449e237f5c77d5dd6, type: 3}
+    - {fileID: 2800000, guid: 37d9fe6f59f666843a5671a0c17a9ace, type: 3}
+    - {fileID: 2800000, guid: 5bf64c771eae7b041b96422b0a28d6c9, type: 3}
+    - {fileID: 2800000, guid: 6191c2305ffcc3b4385f312e707e0526, type: 3}
+    - {fileID: 2800000, guid: 7606d2e4a40fb7541862fa13d24faaa3, type: 3}
+    - {fileID: 2800000, guid: 0df8478dabebb1e45b4138721094cf96, type: 3}
     totalSpriteSurfaceArea: 0
     bindAsDefault: 1
     isAtlasV2: 1

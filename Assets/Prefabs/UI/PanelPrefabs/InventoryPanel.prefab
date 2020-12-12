@@ -344,6 +344,7 @@ MonoBehaviour:
   inventorySlot: {fileID: 7761198011947855817, guid: d6b358f66c2abb542aac3ba0d320d732,
     type: 3}
   closeWhenNull: {fileID: 6878678284303653320}
+  image: {fileID: 0}
 --- !u!114 &6878678284083766211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

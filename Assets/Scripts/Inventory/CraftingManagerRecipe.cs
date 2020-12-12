@@ -6,13 +6,29 @@ public class CraftingManagerRecipe : CraftingManager
 {
     Recipe recipe = null;
     InventoryRecipe inventory;
-    public int recipeProgress { get; private set; } = 0;
+    public float recipeProgress { get; private set; } = 0;
+    [SerializeField] float craftingSpeed = 1;
+    [SerializeField] string idleSprite = "";
+    [SerializeField] string animationSprite = "";
+    int idleSpriteCode = 0;
+    int animationSpriteCode = 0;
+    int currentState = 0;
     Animator animator = null;
+    SpriteRenderer spriteRenderer = null;
     // Start is called before the first frame update
     void Start()
     {
         inventory = GetComponent<InventoryRecipe>();
         TryGetComponent(out animator);
+        TryGetComponent(out spriteRenderer);
+        if (idleSprite != "")
+        {
+            idleSpriteCode = Animator.StringToHash(idleSprite);
+        }
+        if (animationSprite != "")
+        {
+            animationSpriteCode = Animator.StringToHash(animationSprite);
+        }
         if(animator != null)
         {
             animator.speed = 0;
@@ -30,20 +46,22 @@ public class CraftingManagerRecipe : CraftingManager
         {
             if (inventory.ConsumeItems(recipe.Ingredients))
             {
-                recipeProgress++;
+                recipeProgress += craftingSpeed;
                 if (animator != null)
                 {
+                    ChangeAnimationState(animationSpriteCode);
                     animator.speed = 1;
                 }
             }
             else if(animator != null)
             {
+                ChangeAnimationState(idleSpriteCode);
                 animator.speed = 0;
             }
         }
         else if(recipe != null)
         {
-            recipeProgress++;
+            recipeProgress += craftingSpeed;
             if(recipeProgress > recipe.craftingTime)
             {
                 if (inventory.InsertItems(recipe.Results))
@@ -68,5 +86,15 @@ public class CraftingManagerRecipe : CraftingManager
     public override Recipe GetRecipe()
     {
         return recipe;
+    }
+
+    void ChangeAnimationState(int state)
+    {
+        if (state == currentState || state == 0)
+        {
+            return;
+        }
+        animator.Play(state);
+        currentState = state;
     }
 }

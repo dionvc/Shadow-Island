@@ -11,6 +11,7 @@ public class Recipe
     public List<Ingredient> Ingredients = new List<Ingredient>();
     public List<Ingredient> Results = new List<Ingredient>();
     public float craftingTime = 1; //in terms of ticks, with 50 ticks being a second (based on fixedupdate)
+    public string[] craftingTags;
 }
 
 

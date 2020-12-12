@@ -9,4 +9,9 @@ public class LoadNewGame : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("TitleScreen");
+    }
 }

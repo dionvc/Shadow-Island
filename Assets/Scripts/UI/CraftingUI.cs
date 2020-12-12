@@ -10,6 +10,7 @@ public class CraftingUI : MonoBehaviour
     Inventory inventory;
     [SerializeField] MenuSlideOut menuToHideOnRecipeSelect = null;
     List<GameObject> craftingSlots;
+    bool recalculateUI = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,8 @@ public class CraftingUI : MonoBehaviour
     {
         List<KeyValuePair<Recipe, int>> recipeList;
         List<Recipe> regularList;
-        if (inventory != null && inventory is InventoryRecipe)
+        bool inventoryIsRecipe = inventory is InventoryRecipe;
+        if (inventory != null && inventoryIsRecipe && recalculateUI)
         {
             regularList = ((InventoryRecipe)inventory).GetRecipes();
             while (craftingSlots.Count > regularList.Count)
@@ -40,8 +42,9 @@ public class CraftingUI : MonoBehaviour
                 UpdateSlot(regularList[craftingSlots.Count - 1], currentSlot);
                 currentSlot.GetComponent<Button>().onClick.AddListener(delegate { OnClickCraftingSlot(currentSlot); });
             }
+            recalculateUI = false;
         }
-        else if (inventory != null && inventory.CalculateRecipes(out recipeList))
+        else if (inventory != null && !inventoryIsRecipe && inventory.CalculateRecipes(out recipeList) )
         {
             while (craftingSlots.Count > recipeList.Count)
             {
@@ -70,7 +73,7 @@ public class CraftingUI : MonoBehaviour
             CraftingManagerQueue queue;
             if(inventory.gameObject.TryGetComponent(out queue))
             {
-                queue.SetRecipe(Definitions.Instance.RecipeDictionary[slotScript.recipeID], Mathf.Min(slotScript.amount, 5));
+                queue.SetRecipe(Definitions.Instance.RecipeDictionaryIndexed[slotScript.recipeID], Mathf.Min(slotScript.amount, 5));
                 return;
             }
         }
@@ -79,14 +82,14 @@ public class CraftingUI : MonoBehaviour
             CraftingManagerQueue queue;
             if (inventory.gameObject.TryGetComponent(out queue))
             {
-                queue.SetRecipe(Definitions.Instance.RecipeDictionary[craftingSlot.GetComponent<CraftingSlot>().recipeID], slotScript.amount);
+                queue.SetRecipe(Definitions.Instance.RecipeDictionaryIndexed[craftingSlot.GetComponent<CraftingSlot>().recipeID], slotScript.amount);
                 return;
             }
         }
         CraftingManager craftingManager;
         if (inventory.gameObject.TryGetComponent(out craftingManager))
         {
-            craftingManager.SetRecipe(Definitions.Instance.RecipeDictionary[slotScript.recipeID]);
+            craftingManager.SetRecipe(Definitions.Instance.RecipeDictionaryIndexed[slotScript.recipeID]);
         }
         if(menuToHideOnRecipeSelect != null)
         {
@@ -166,5 +169,6 @@ public class CraftingUI : MonoBehaviour
                 menuSlideOut.TogglePanel(MenuSlideOut.PanelState.panelOut);
             }
         }
+        recalculateUI = true;
     }
 }

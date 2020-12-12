@@ -9,17 +9,25 @@ public class GeneratorObjects : MonoBehaviour
     [SerializeField] Grid grid;
     [SerializeField] Tilemap water;
     [SerializeField] Tilemap cliff;
+    [SerializeField] Tilemap tallGrass;
     [SerializeField] List<float> treeValues;
     [SerializeField] List<GameObject> trees;
     [SerializeField] List<GameObject> deadTrees;
     [SerializeField] List<float> oreValues;
     [SerializeField] List<GameObject> ores;
+
+    [SerializeField] GameObject oilPatch;
+    [SerializeField] float oilPatchDensity = 4;
+    [SerializeField] float oilValue = 0.7f;
+    [SerializeField] float oilSeed = 0;
+
     float[] oreSeeds;
-    int generateDelay = 0;
     [SerializeField] float treeDensity;
     ContactFilter2D filter;
     [SerializeField] LayerMask layerMask = 0;
     Collider2D[] colliders;
+
+    Alliance neutralAlliance;
 
     // Start is called before the first frame update
     void Start()
@@ -31,11 +39,14 @@ public class GeneratorObjects : MonoBehaviour
         filter.useTriggers = false;
         colliders = new Collider2D[1];
         oreSeeds = new float[ores.Count];
+
+        
     }
 
     // Update is called once per frame
     public void GenerateObjects()
     {
+        neutralAlliance = new Alliance("Neutral");
         for (int x = 0; x < generator.sizeX * 32; x++)
         {
             for (int y = 0; y < generator.sizeY * 32; y++)
@@ -88,16 +99,44 @@ public class GeneratorObjects : MonoBehaviour
                 {
                     if (min < 0.15)
                     {
-                        Instantiate(trees[index], rounded + collider.offset - offset, Quaternion.identity);
+                        GameObject tree = Instantiate(trees[index], rounded + collider.offset - offset, Quaternion.identity);
+                        tree.GetComponent<Health>().alliance = neutralAlliance.allianceCode;
+                        tallGrass.SetTile(grid.WorldToCell(rounded + collider.offset - offset), null);
                     }
                     else if (min < 0.3)
                     {
-                        Instantiate(deadTrees[index], rounded + collider.offset - offset, Quaternion.identity);
+                        GameObject tree = Instantiate(deadTrees[index], rounded + collider.offset - offset, Quaternion.identity);
+                        tree.GetComponent<Health>().alliance = neutralAlliance.allianceCode;
+                        tallGrass.SetTile(grid.WorldToCell(rounded + collider.offset - offset), null);
                     }
                 }
             }
         }
         this.enabled = false;
+
+
+        PoissonDiscSampler oilSampler = new PoissonDiscSampler(generator.sizeX * 32, generator.sizeY * 32, oilPatchDensity);
+        IEnumerable oilSamples = oilSampler.Samples();
+        Vector2 oilPatchSize = oilPatch.GetComponent<BoxCollider2D>().size;
+        foreach(Vector2 oilSample in oilSamples)
+        {
+            if(SamplePerlinOil((int)oilSample.x, (int)oilSample.y, generator.sizeX, generator.sizeY) > oilValue)
+            {
+                Vector2 oilSampleRounded = new Vector2((int)oilSample.x, (int)oilSample.y);
+                if(Physics2D.OverlapBox(oilSampleRounded, oilPatchSize, 0) == null)
+                {
+                    Instantiate(oilPatch, oilSampleRounded, Quaternion.identity);
+                    Vector3Int initPos = grid.WorldToCell(oilSampleRounded);
+                    for(int i = initPos.x - 1; i < initPos.x + oilPatchSize.x - 1; i++)
+                    {
+                        for(int j = initPos.y - 1; j < initPos.y + oilPatchSize.y -1; j++)
+                        {
+                            tallGrass.SetTile(new Vector3Int(i, j, 0), null);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private float SamplePerlinOre(int index, int x, int y, int sizeX, int sizeY)
@@ -111,6 +150,18 @@ public class GeneratorObjects : MonoBehaviour
             (x / (12.0f)) + oreSeeds[index], 
             (y / (12.0f)) + oreSeeds[index])
             , 0, 1.0f);
+    }
+
+    private float SamplePerlinOil(int x, int y, int sizeX, int sizeY)
+    {
+        if(oilSeed == 0)
+        {
+            oilSeed = Random.value + Random.Range(0, 1024);
+        }
+        return Mathf.Clamp(Mathf.PerlinNoise(
+            x/12.0f + oilSeed,
+            y/12.0f + oilSeed)
+            ,0, 1.0f);
     }
 
     /// <summary>

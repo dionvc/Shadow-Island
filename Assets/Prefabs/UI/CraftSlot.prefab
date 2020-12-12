@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1398ddb7cddef554ca18e89e0a5a6f9b, type: 2}
-  m_sharedMaterial: {fileID: -4533648574842679845, guid: 1398ddb7cddef554ca18e89e0a5a6f9b,
+  m_sharedMaterial: {fileID: 4468372362539157844, guid: 1398ddb7cddef554ca18e89e0a5a6f9b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

@@ -80,7 +80,7 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(PlayerData.Instance.keybinds["Move up"]))
+        if(Input.GetKey(PlayerData.Instance.keybinds["Move Up"]))
         {
             moveUp = 1;
         }

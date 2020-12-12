@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class Generator : MonoBehaviour
 {
@@ -237,14 +238,14 @@ public class Generator : MonoBehaviour
             {
                 GenerateTerrain(x, y);
                 GenerateCliffs(x, y);
-                progress = (x * sizeX + y) / (sizeX * sizeY + 3.0f);
+                progress = (x * sizeY + y) / (sizeX * sizeY + 10.0f);
                 yield return new WaitForFixedUpdate();
             }
         }
         CoverEdges();
-        progress = (sizeX * sizeY + 1.0f) / (sizeX * sizeY + 3.0f);
+        progress = (sizeX * sizeY + 1.0f) / (sizeX * sizeY + 10.0f);
         yield return new WaitForFixedUpdate();
-        progress = (sizeX * sizeY + 2.0f) / (sizeX * sizeY + 3.0f);
+        progress = (sizeX * sizeY + 2.0f) / (sizeX * sizeY + 10.0f);
         GenerateGrass();
         yield return new WaitForFixedUpdate();
         progress = 1.0f;
@@ -625,5 +626,10 @@ public class Generator : MonoBehaviour
         {
             colliders[i].enabled = false;
         }
+    }
+
+    public void RemoveFromDontDestroyOnLoad()
+    {
+        SceneManager.MoveGameObjectToScene(this.gameObject, SceneManager.GetActiveScene());
     }
 }

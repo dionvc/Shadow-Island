@@ -11,6 +11,8 @@ public class InventoryUI : MonoBehaviour
     Inventory mouseInventory = null;
     [SerializeField] GameObject inventorySlot = null;
     [SerializeField] MenuSlideOut closeWhenNull = null;
+    [SerializeField] Image image = null;
+    SpriteRenderer spriteRenderer = null;
     List<GameObject> itemSlots;
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,11 @@ public class InventoryUI : MonoBehaviour
     {
         if (inventory != null)
         {
+            if(spriteRenderer != null && image != null)
+            {
+                image.sprite = spriteRenderer.sprite;
+                
+            }
             ReadOnlyCollection<ItemStack> items = inventory.inventoryReadOnly;
             while (itemSlots.Count > items.Count)
             {
@@ -44,7 +51,15 @@ public class InventoryUI : MonoBehaviour
 
     void OnClickInventorySlot(GameObject inventorySlot)
     {
-        inventory.TransferMouse(mouseInventory, inventorySlot.GetComponent<InventorySlot>().slotID);
+        AmmoSlot ammoInv = inventory as AmmoSlot;
+        if (ammoInv != null)
+        {
+            ammoInv.TransferMouse(mouseInventory, inventorySlot.GetComponent<InventorySlot>().slotID);
+        }
+        else
+        {
+            inventory.TransferMouse(mouseInventory, inventorySlot.GetComponent<InventorySlot>().slotID);
+        }
     }
 
     void UpdateSlot(ItemStack itemStack, GameObject inventorySlot, int slotID)
@@ -75,6 +90,22 @@ public class InventoryUI : MonoBehaviour
     public void SetViewedInventory(Inventory inventory)
     {
         this.inventory = inventory;
+        if (inventory != null)
+        {
+            inventory.gameObject.TryGetComponent(out spriteRenderer);
+        }
+        if(spriteRenderer != null && image != null)
+        {
+            float width = spriteRenderer.bounds.size.x;
+            float height = spriteRenderer.bounds.size.y;
+            float factorWidth = 96.0f / width;
+            float factorHeight = 96.0f / height;
+            float factor = Mathf.Max(factorWidth, factorHeight);
+            
+            RectTransform transform = image.gameObject.GetComponent<RectTransform>();
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * factor);
+            transform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height * factor);
+        }
         if(inventory == null)
         {
 

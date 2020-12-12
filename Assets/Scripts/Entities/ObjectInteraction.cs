@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class ObjectInteraction : MonoBehaviour
 {
@@ -10,10 +11,13 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] GameObject inventoryPanelPrefab;
     [SerializeField] GameObject craftingPanelPrefab;
     [SerializeField] GameObject mouseInventoryPrefab;
+    [SerializeField] GameObject ammoInventoryPrefab;
     MachineUI machineUI;
     InventoryUI inventoryInteractUI;
     InventoryUI inventoryUI;
+    InventoryUI inventoryAmmoUI;
     CraftingUI craftingUI;
+    HighlightSlotUI ammoSlotSelected;
 
     //Raycast variables
     [SerializeField] LayerMask layerMask;
@@ -26,6 +30,7 @@ public class ObjectInteraction : MonoBehaviour
 
     //Placement components
     Grid placeGrid = null;
+    Tilemap tallGrassMap = null;
     [SerializeField] Inventory mouseInventory = null;
     [SerializeField] GameObject placeSpritePrefab = null;
     GameObject placeSprite = null;
@@ -34,7 +39,15 @@ public class ObjectInteraction : MonoBehaviour
     //Mining components/variables
     public Mineable currentMineable { get; private set; } = null;
     Inventory playerInventory = null;
+    AmmoSlot ammoInventory = null;
+    int selectedAmmoSlot = 0;
     public int miningProgress {get; private set; } = 0;
+    bool fireWeapon = false;
+    [SerializeField] int firingSpeed = 10; //number of fixedupdates before player can fire again
+    int firingTimer = 0;
+
+
+    Alliance characterAlliance;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +62,19 @@ public class ObjectInteraction : MonoBehaviour
         filter.useTriggers = false;
 
         placeSprite = Instantiate(placeSpritePrefab, Vector3.zero, Quaternion.identity);
+        Inventory[] inventories = GetComponents<Inventory>();
+        for (int i = 0; i < inventories.Length; i++) 
+        {
+            if (inventories[i] is AmmoSlot)
+            {
+                ammoInventory = inventories[i] as AmmoSlot;
+            }
+            else
+            {
+                playerInventory = inventories[i];
+            }
+        }
+
         playerInventory = GetComponent<Inventory>();
         placeSpriteRenderer = placeSprite.GetComponent<SpriteRenderer>();
         Camera.main.GetComponent<CameraFollow>().SetCameraTarget(this.gameObject);
@@ -58,22 +84,48 @@ public class ObjectInteraction : MonoBehaviour
         GameObject inventoryInteract = Instantiate(inventoryPanelInteractPrefab, canvas.transform);
         GameObject inventoryPanel = Instantiate(inventoryPanelPrefab, canvas.transform);
         GameObject craftingPanel = Instantiate(craftingPanelPrefab, canvas.transform);
+        GameObject inventoryAmmo = Instantiate(ammoInventoryPrefab, canvas.transform);
         Instantiate(mouseInventoryPrefab, canvas.transform).GetComponent<InventoryMouse>().SetInventory(mouseInventory);
         machineUI = machinePanelInteract.GetComponentInChildren<MachineUI>();
         inventoryInteractUI = inventoryInteract.GetComponentInChildren<InventoryUI>();
         inventoryUI = inventoryPanel.GetComponentInChildren<InventoryUI>();
         craftingUI = craftingPanel.GetComponentInChildren<CraftingUI>();
+        inventoryAmmoUI = inventoryAmmo.GetComponentInChildren<InventoryUI>();
+        ammoSlotSelected = inventoryAmmo.GetComponentInChildren<HighlightSlotUI>();
 
+        inventoryAmmoUI.SetViewedInventory(ammoInventory);
+        inventoryAmmoUI.SetMouseInventory(mouseInventory);
         inventoryUI.SetViewedInventory(playerInventory);
         inventoryUI.SetMouseInventory(mouseInventory);
         inventoryInteractUI.SetMouseInventory(mouseInventory);
         craftingUI.SetLinkedInventory(playerInventory);
         machineUI.SetMouseInventory(mouseInventory);
+
+
+        
+        characterAlliance = new Alliance("Character");
+        this.gameObject.GetComponent<Health>().alliance = characterAlliance.allianceCode;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.K))
+        {
+            DebugInventory();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z) && mouseInventory.inventoryReadOnly[0] != null)
+        {
+            ItemEntityPool.Instance.CreateItemEntity(Camera.main.ScreenToWorldPoint(Input.mousePosition), mouseInventory.inventoryReadOnly[0].item);
+            mouseInventory.DecrementStack(0);
+        }
+
+        if(Input.GetKey(PlayerData.Instance.keybinds["Fire Weapon"]))
+        {
+            fireWeapon = true;
+        }
+
         if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             
@@ -126,6 +178,8 @@ public class ObjectInteraction : MonoBehaviour
                             {
                                 GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
                                 building.GetComponent<CraftingManagerFixed>().SetMineables(mineables);
+                                building.GetComponent<Health>().alliance = characterAlliance.allianceCode;
+                                DestroyGrassAt(placeVector - offset, size);
                                 mouseInventory.DecrementStack(0);
                             }
                         }
@@ -139,7 +193,9 @@ public class ObjectInteraction : MonoBehaviour
                         placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                         if (Input.GetMouseButton(0))
                         {
-                            Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                            GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                            building.GetComponent<Health>().alliance = characterAlliance.allianceCode;
+                            DestroyGrassAt(placeVector - offset, size);
                             mouseInventory.DecrementStack(0);
                         }
                     }
@@ -222,7 +278,15 @@ public class ObjectInteraction : MonoBehaviour
             placeSpriteRenderer.color = new Color(1, 1, 1, 0);
         }
 
-        
+        if(Input.GetKeyDown(PlayerData.Instance.keybinds["Change Ammo"]))
+        {
+            selectedAmmoSlot++;
+            if(selectedAmmoSlot >= ammoInventory.inventoryReadOnly.Count)
+            {
+                selectedAmmoSlot = 0;
+            }
+            ammoSlotSelected.SetHighlightedSlot(selectedAmmoSlot);
+        }
     }
 
     void FixedUpdate()
@@ -236,11 +300,61 @@ public class ObjectInteraction : MonoBehaviour
                 miningProgress = 0;
             }
         }
+
+        if (firingTimer < firingSpeed)
+        {
+            firingTimer++;
+        }
+        if (fireWeapon == true && firingTimer == firingSpeed)
+        {
+            if (ammoInventory.inventoryReadOnly[selectedAmmoSlot] != null)
+            {
+                ItemAmmo ammo = ammoInventory.inventoryReadOnly[selectedAmmoSlot].item as ItemAmmo;
+                if (ammo != null)
+                {
+                    ammo.OnFire(Camera.main.ScreenToWorldPoint(Input.mousePosition), this.gameObject);
+                    ammoInventory.DecrementStack(selectedAmmoSlot);
+                    firingTimer = 0;
+                }
+            }
+            
+        }
+        fireWeapon = false;
     }
 
     public void SetPlaceGrid(Grid grid)
     {
         this.placeGrid = grid;
+    }
+
+    void DestroyGrassAt(Vector2 center, Vector2 size) 
+    {
+        if (tallGrassMap == null)
+        {
+            int childCount = placeGrid.transform.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                if (placeGrid.transform.GetChild(i).name == "TallGrassMap")
+                {
+                    tallGrassMap = placeGrid.transform.GetChild(i).gameObject.GetComponent<Tilemap>();
+                }
+            }
+        }
+        int iBound = Mathf.CeilToInt(center.x + (size.x / 2.0f));
+        int jBound = Mathf.CeilToInt(center.y + (size.y / 2.0f));
+        for (int i = (int)(center.x - (size.x/2.0f)); i < iBound; i++)
+        {
+            for (int j =  (int)(center.y - (size.x/2.0f)); j < jBound; j++)
+            {
+                Vector3Int pos = new Vector3Int(i, j, 0);
+                if (tallGrassMap.HasTile(pos))
+                {
+                    ParticleSystemPool.Instance.EmitParticle(ParticleSystemPool.ParticleType.grass, center, Random.Range(2, 10), true);
+                }
+                tallGrassMap.SetTile(pos, null);
+                
+            }
+        }
     }
 
     public void DebugInventory()
@@ -251,5 +365,10 @@ public class ObjectInteraction : MonoBehaviour
         {
             playerInventory.InsertStack(new ItemStack(item.Value, 5));
         }
+    }
+
+    public float GetReloadProgress()
+    {
+        return ((firingTimer * 1.0f) / firingSpeed);
     }
 }

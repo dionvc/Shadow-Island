@@ -156,7 +156,13 @@ public class InventoryRecipe : Inventory
 
     public List<Recipe> GetRecipes()
     {
-        return Definitions.Instance.RecipeDefinitions;
+        List<Recipe> recipes;
+        Definitions.Instance.RecipeDictionary.TryGetValue(craftingTag, out recipes);
+        if(recipes == null)
+        {
+            return new List<Recipe>();
+        }
+        return recipes;
     }
 
     public bool NeedGather()

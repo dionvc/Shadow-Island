@@ -6,10 +6,11 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     bool inventoryHasChanged = true;
-    private List<ItemStack> inventory;
+    protected List<ItemStack> inventory;
     [SerializeField] private int size = 0;
     List<KeyValuePair<Recipe, int>> possibleRecipes;
-    public ReadOnlyCollection<ItemStack> inventoryReadOnly { get; private set; }
+    public ReadOnlyCollection<ItemStack> inventoryReadOnly { get; protected set; }
+    [SerializeField] protected string craftingTag;
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,6 @@ public class Inventory : MonoBehaviour
         {
             mouse.inventory[0] = inventory[slotID];
             inventory[slotID] = null;
-
         }
         else if(mouse.inventory[0] != null && inventory[slotID] == null)
         {
@@ -51,6 +51,13 @@ public class Inventory : MonoBehaviour
                     mouse.inventory[0] = null;
                 }
             }
+            else
+            {
+                ItemStack temp;
+                temp = mouse.inventory[0];
+                mouse.inventory[0] = inventory[slotID];
+                inventory[slotID] = temp;
+            }
         }
         inventoryHasChanged = true;
     }
@@ -61,7 +68,13 @@ public class Inventory : MonoBehaviour
         if (inventoryHasChanged)
         {
             changed = true;
-            List<Recipe> recipes = Definitions.Instance.RecipeDefinitions;
+            List<Recipe> recipes;
+            Definitions.Instance.RecipeDictionary.TryGetValue(craftingTag, out recipes);
+            if(recipes == null)
+            {
+                calculatedRecipes = new List<KeyValuePair<Recipe, int>>();
+                return false;
+            }
             possibleRecipes.Clear();
             for (int i = 0; i < recipes.Count; i++)
             {

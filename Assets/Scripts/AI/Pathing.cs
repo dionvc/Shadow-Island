@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -173,9 +174,9 @@ public class Pathing : MonoBehaviour
             }
         }
         //Second time, start from the top right
-        for(int i = sizeX - 1; i > 0; i--)
+        for(int i = sizeX - 2; i > 0; i--)
         {
-            for(int j = sizeY - 1; j > 0; j--)
+            for(int j = sizeY - 2; j > 0; j--)
             {
                 if (distToObstacle[i][j] != -1)
                 {

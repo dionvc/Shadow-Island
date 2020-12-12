@@ -33,23 +33,50 @@ public class Definitions : MonoBehaviour
 
     public List<Recipe> RecipeDefinitions = new List<Recipe>();
 
-    private Dictionary<int, Recipe> recipeDic;
+    private Dictionary<string, List<Recipe>> recipeDic;
+    private Dictionary<int, Recipe> recipeDicIndexed;
 
-    public Dictionary<int, Recipe> RecipeDictionary
+    public Dictionary<string, List<Recipe>> RecipeDictionary
     {
         get
         {
             if(recipeDic == null)
             {
-                recipeDic = new Dictionary<int, Recipe>();
-                foreach (Recipe recipe in RecipeDefinitions) recipeDic[recipe.recipeID] = recipe;
+                recipeDic = new Dictionary<string, List<Recipe>>();
+                foreach (Recipe recipe in RecipeDefinitions)
+                {
+                    for (int i = 0; i < recipe.craftingTags.Length; i++)
+                    {
+                        if(!recipeDic.ContainsKey(recipe.craftingTags[i]))
+                        {
+                            recipeDic[recipe.craftingTags[i]] = new List<Recipe>();
+                        }
+                        recipeDic[recipe.craftingTags[i]].Add(recipe);
+                    }
+                }
             }
             return recipeDic;
         }
     }
 
+    public Dictionary<int, Recipe> RecipeDictionaryIndexed
+    {
+        get
+        {
+            if(recipeDicIndexed == null)
+            {
+                recipeDicIndexed = new Dictionary<int, Recipe>();
+                foreach(Recipe recipe in RecipeDefinitions)
+                {
+                    recipeDicIndexed[recipe.recipeID] = recipe;
+                }
+            }
+            return recipeDicIndexed;
+        }
+    }
     [SerializeField] List<Item> ItemDefinitions = new List<Item>();
     [SerializeField] List<ItemThrowable> ItemThrowableDefintions = new List<ItemThrowable>();
+    [SerializeField] List<ItemAmmo> ItemAmmoDefinitions = new List<ItemAmmo>();
 
     private Dictionary<int, Item> itemDic;
     public Dictionary<int, Item> ItemDictionary
@@ -62,8 +89,17 @@ public class Definitions : MonoBehaviour
                 itemDic = new Dictionary<int, Item>();
                 foreach (Item item in ItemDefinitions) itemDic[item.id] = item;
                 foreach (Item item in ItemThrowableDefintions) itemDic[item.id] = item;
+                foreach (Item item in ItemAmmoDefinitions) itemDic[item.id] = item;
             }
             return itemDic;
+        }
+    }
+
+    private void Start()
+    {
+        foreach(ItemAmmo ammo in ItemAmmoDefinitions)
+        {
+            ammo.InitializeFilter();
         }
     }
 }

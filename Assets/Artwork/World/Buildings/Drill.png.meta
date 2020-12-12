@@ -1,19 +1,31 @@
 fileFormatVersion: 2
-guid: 8b298eadd1e7d254c92a4ce4ade5d813
+guid: d16df68a1c070424fa96b18a7cc8a48b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1035178460816431546
-    second: Drill2_0
+      213: -3010401151903113755
+    second: Drill_0
   - first:
-      213: 7134990651848425663
-    second: Drill2_1
+      213: -4556558838227070352
+    second: Drill_1
   - first:
-      213: 2084502227371595261
-    second: Drill2_2
+      213: -8027607031544988610
+    second: Drill_2
   - first:
-      213: -5515270476560844435
-    second: Drill2_3
+      213: 5412204485811736503
+    second: Drill_3
+  - first:
+      213: 940531105547323407
+    second: Drill_4
+  - first:
+      213: -8765063191345744060
+    second: Drill_5
+  - first:
+      213: 1401521115645096403
+    second: Drill_6
+  - first:
+      213: 2029743455723203639
+    second: Drill_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -103,85 +115,169 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drill2_0
+      name: Drill_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 62
-        height: 60
+        x: 0
+        y: 0
+        width: 64
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 646a6ebacae42a1f0800000000000000
-      internalID: -1035178460816431546
+      spriteID: 5ed53652a18e836d0800000000000000
+      internalID: -3010401151903113755
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drill2_1
+      name: Drill_1
       rect:
         serializedVersion: 2
-        x: 65
-        y: 1
-        width: 62
-        height: 60
+        x: 64
+        y: 0
+        width: 64
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb0882fe134940360800000000000000
-      internalID: 7134990651848425663
+      spriteID: 0721f49d0e9d3c0c0800000000000000
+      internalID: -4556558838227070352
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drill2_2
+      name: Drill_2
       rect:
         serializedVersion: 2
-        x: 129
-        y: 1
-        width: 62
-        height: 60
+        x: 128
+        y: 0
+        width: 64
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df59efb4bb3adec10800000000000000
-      internalID: 2084502227371595261
+      spriteID: e3c3558dfe5389090800000000000000
+      internalID: -8027607031544988610
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Drill2_3
+      name: Drill_3
       rect:
         serializedVersion: 2
-        x: 193
-        y: 1
-        width: 62
-        height: 60
+        x: 192
+        y: 0
+        width: 64
+        height: 80
       alignment: 9
-      pivot: {x: 0.5, y: 0.25}
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d69346409b2d573b0800000000000000
-      internalID: -5515270476560844435
+      spriteID: 7bf85940e430c1b40800000000000000
+      internalID: 5412204485811736503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drill_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 80
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f088a5eae007d0d00800000000000000
+      internalID: 940531105547323407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drill_5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 80
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4473cfd777d3c5680800000000000000
+      internalID: -8765063191345744060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drill_6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 80
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d13c337704337310800000000000000
+      internalID: 1401521115645096403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Drill_7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 80
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73c2e8f3be81b2c10800000000000000
+      internalID: 2029743455723203639
       vertices: []
       indices: 
       edges: []
@@ -196,7 +292,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures:
-    - texture: {fileID: 2800000, guid: 1a3e2273301dcdb48bf759493460bc27, type: 3}
+    - texture: {fileID: 2800000, guid: 8189f0f8b8312774b95c6fff953c1f70, type: 3}
       name: _NormalMap
   spritePackingTag: 
   pSDRemoveMatte: 0

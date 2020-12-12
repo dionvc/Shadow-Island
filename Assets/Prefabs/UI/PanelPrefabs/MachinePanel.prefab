@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -387,8 +387,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outTarget: {x: 0, y: 192, z: 0}
   inTarget: {x: 0, y: -160, z: 0}
-  slideOutKey: 0
+  slideOutKey: 
   otherMenusToHide: []
+  popOutOnStart: 0
 --- !u!114 &4489835595639203374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,7 +694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -835,9 +836,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outTarget: {x: 0, y: 96, z: 0}
   inTarget: {x: 0, y: -352, z: 0}
-  slideOutKey: 0
+  slideOutKey: 
   otherMenusToHide:
   - {fileID: 4489835595639203373}
+  popOutOnStart: 0
 --- !u!114 &4489835596932741465
 MonoBehaviour:
   m_ObjectHideFlags: 0

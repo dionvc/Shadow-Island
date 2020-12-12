@@ -792,6 +792,7 @@ MonoBehaviour:
   tallGrass: {fileID: 11400000, guid: ea134529608f1584ca02ff96c9c82223, type: 2}
   tallGrassMap: {fileID: 8817132984604479562}
   progress: 0
+  colliderProgress: 0
 --- !u!114 &8817132983252528891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,6 +808,7 @@ MonoBehaviour:
   grid: {fileID: 8817132983252528895}
   water: {fileID: 8817132982703646082}
   cliff: {fileID: 8817132984486933824}
+  tallGrass: {fileID: 8817132984604479562}
   treeValues:
   - 3.7
   - 4
@@ -826,6 +828,11 @@ MonoBehaviour:
   - {fileID: 8133852994327834226, guid: 2b94a8c50b602af49807f4ee03dd3f5f, type: 3}
   - {fileID: 2002207792217595347, guid: 9e3c82096da485349956757c5c34da45, type: 3}
   - {fileID: 7837157876899576603, guid: a89ced57182652048878a98e2efd5860, type: 3}
+  oilPatch: {fileID: 3179606199850928154, guid: c9d68d3a9c14a074a94a73334289eee0,
+    type: 3}
+  oilPatchDensity: 4
+  oilValue: 0.7
+  oilSeed: 0
   treeDensity: 3
   layerMask:
     serializedVersion: 2

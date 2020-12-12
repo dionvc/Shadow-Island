@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7271eec1865c644a0690a99449a147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemIDresult: 3
+  itemIDresult: 1
   amountOnMine: 1
   totalAmount: 10
   miningTime: 100

@@ -11,11 +11,16 @@ public class ParticleSystemPool : MonoBehaviour
         mediumExplosion,
         iceCrystal,
         poisonCloud,
-        wood,
-        leaf,
+        acidCloud, //unimplemented
+        wood, //unimplemented
+        leaf, //unimplemented
         grass,
-        dust,
-        blood
+        dust, //unimplemented
+        blood, //unimplemented
+        machine,
+        gunFlare,
+        bulletCase, //unimplemented
+        bulletHit //unimplemented
     }
 
     [System.Serializable]
@@ -56,7 +61,7 @@ public class ParticleSystemPool : MonoBehaviour
         particleSystemDictionary = new Dictionary<ParticleType, ParticleSystem>();
         foreach(ParticleSystemPair pair in pairList)
         {
-            particleSystemDictionary[pair.type] = pair.system;
+            particleSystemDictionary[pair.type] = Instantiate(pair.system, Vector3.zero, Quaternion.identity);
         }
     }
 
@@ -70,7 +75,57 @@ public class ParticleSystemPool : MonoBehaviour
         {
             return;
         }
-        emitParams.position = location;
+        emitParams.position = new Vector3(location.x, location.y, 0);
         particleSystemDictionary[type].Emit(emitParams, quantity);
+    }
+
+    public void EmitParticle(ParticleType type, Vector2 location, int quantity, bool retainShape)
+    {
+        if (quantity <= 0)
+        {
+            return;
+        }
+        if (type == ParticleType.none)
+        {
+            return;
+        }
+        emitParams.position = new Vector3(location.x, location.y, 0);
+        emitParams.applyShapeToPosition = retainShape;
+        particleSystemDictionary[type].Emit(emitParams, quantity);
+        emitParams.applyShapeToPosition = false;
+    }
+
+    public void EmitParticle(ParticleType type, Vector2 location, int quantity, bool retainShape, Color color)
+    {
+        if (quantity <= 0)
+        {
+            return;
+        }
+        if (type == ParticleType.none)
+        {
+            return;
+        }
+        emitParams.position = new Vector3(location.x, location.y, 0);
+        emitParams.startColor = color;
+        emitParams.applyShapeToPosition = retainShape;
+        particleSystemDictionary[type].Emit(emitParams, quantity);
+        emitParams.applyShapeToPosition = false;
+        emitParams.startColor = Color.white;
+    }
+
+    public void EmitParticle(ParticleType type, Vector2 location, float rotation, int quantity)
+    {
+        if (quantity <= 0)
+        {
+            return;
+        }
+        if (type == ParticleType.none)
+        {
+            return;
+        }
+        emitParams.position = location;
+        emitParams.rotation = rotation;
+        particleSystemDictionary[type].Emit(emitParams, quantity);
+        emitParams.rotation = 0.0f;
     }
 }
