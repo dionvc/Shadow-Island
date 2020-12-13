@@ -35,6 +35,7 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] GameObject placeSpritePrefab = null;
     GameObject placeSprite = null;
     SpriteRenderer placeSpriteRenderer;
+    int placementRotation = 0;
 
     //Mining components/variables
     public Mineable currentMineable { get; private set; } = null;
@@ -115,17 +116,29 @@ public class ObjectInteraction : MonoBehaviour
             DebugInventory();
         }
 
-        if(Input.GetKeyDown(KeyCode.Z) && mouseInventory.inventoryReadOnly[0] != null)
+        //Drop item
+        if(Input.GetKeyDown(PlayerData.Instance.keybinds["Drop Item"]) && mouseInventory.inventoryReadOnly[0] != null)
         {
             ItemEntityPool.Instance.CreateItemEntity(Camera.main.ScreenToWorldPoint(Input.mousePosition), mouseInventory.inventoryReadOnly[0].item);
             mouseInventory.DecrementStack(0);
         }
 
+        //Fire weapon
         if(Input.GetKey(PlayerData.Instance.keybinds["Fire Weapon"]))
         {
             fireWeapon = true;
         }
 
+        if(Input.GetKeyDown(PlayerData.Instance.keybinds["Rotate Buildable"]))
+        {
+            placementRotation--;
+            if(placementRotation < 0)
+            {
+                placementRotation = 3;
+            }
+        }
+
+        
         if(!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             
@@ -137,14 +150,14 @@ public class ObjectInteraction : MonoBehaviour
             if (mouseInventory.inventoryReadOnly[0] != null)
             {
                 ItemThrowable throwable = mouseInventory.inventoryReadOnly[0].item as ItemThrowable;
-                if (throwable != null && Input.GetMouseButtonDown(0))
+                if (throwable != null && Input.GetMouseButtonDown(0)) //thrown item code
                 {
                     Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     ThrownItem thrown = Instantiate(throwable.thrownResult, this.transform.position, Quaternion.identity).GetComponent<ThrownItem>();
                     thrown.SetTarget(place);
                     mouseInventory.DecrementStack(0);
                 }
-                else if (mouseInventory.inventoryReadOnly[0].item.placeableResult != null)
+                else if (mouseInventory.inventoryReadOnly[0].item.placeableResult != null) //place building code
                 {
                     Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     Vector3 placeRounded = new Vector3(Mathf.Round(place.x), Mathf.Round(place.y), 0);
@@ -163,11 +176,29 @@ public class ObjectInteraction : MonoBehaviour
 
                     placeSprite.transform.position = placeVector - offset;
                     placeSpriteRenderer.sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
+                    IRotate rotateable;
+                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out rotateable))
+                    {
+                        placeSpriteRenderer.sprite = rotateable.GetRotatedPlaceSprite(placementRotation);
+                    }
 
-                    
                     BuildingManager buildingManager;
 
-                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
+
+                    if (rotateable != null && Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders) == 0)
+                    {
+                        rotateable.GetRotatedPlaceSprite(placementRotation);
+                        placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
+                        if (Input.GetMouseButton(0))
+                        {
+                            GameObject building = Instantiate(mouseInventory.inventoryReadOnly[0].item.placeableResult, placeVector - offset, Quaternion.identity);
+                            building.GetComponent<Health>().alliance = characterAlliance.allianceCode;
+                            building.GetComponent<IRotate>().InitializeRotated(placementRotation);
+                            DestroyGrassAt(placeVector - offset, size);
+                            mouseInventory.DecrementStack(0);
+                        }
+                    }
+                    else if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
                     {
                         Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filterMining, collidersList);
                         List<Mineable> mineables;
@@ -363,7 +394,7 @@ public class ObjectInteraction : MonoBehaviour
         Definitions definitions = Definitions.Instance;
         foreach (KeyValuePair<int, Item> item in Definitions.Instance.ItemDictionary)
         {
-            playerInventory.InsertStack(new ItemStack(item.Value, 5));
+            playerInventory.InsertStack(new ItemStack(item.Value, item.Value.maxStack));
         }
     }
 

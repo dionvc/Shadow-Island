@@ -733,7 +733,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 439
+    m_Bits: 1463
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3305,6 +3305,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
         type: 3}
+      propertyPath: ItemDefinitions.Array.size
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
       propertyPath: RecipeDefinitions.Array.data[8].recipeID
       value: 8
       objectReference: {fileID: 0}
@@ -3719,11 +3724,72 @@ PrefabInstance:
       propertyPath: RecipeDefinitions.Array.data[13].craftingTags.Array.data[1]
       value: assembler
       objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: ItemDefinitions.Array.data[30].itemSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 18d6106a01b8b63408f1eb1efbfa3158,
+        type: 3}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: ItemDefinitions.Array.data[30].name
+      value: ConveyorBelt
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: ItemDefinitions.Array.data[30].placeableResult
+      value: 
+      objectReference: {fileID: 6879029174230821201, guid: 8ffe084d13973bc479140529bb19caa5,
+        type: 3}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: ItemDefinitions.Array.data[30].maxStack
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254476, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: ItemDefinitions.Array.data[30].id
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 9099891263257254477, guid: f757ca4c32447a945aeeb8a3e68cf804,
         type: 3}
       propertyPath: m_Name
       value: Definitions
       objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.data[0].sprites.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.data[0].sprites.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 08a945b63185a4a4e9afe7b413e2f66d,
+        type: 3}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.data[0].sprites.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: f2bbfc67f7abe8643a14041efeaba199,
+        type: 3}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.data[0].sprites.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: d4e070a3a9fffad4382273e11f12d3b3,
+        type: 3}
+    - target: {fileID: 9099891263257254513, guid: f757ca4c32447a945aeeb8a3e68cf804,
+        type: 3}
+      propertyPath: rotatedSpriteProps.Array.data[0].sprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 18d6106a01b8b63408f1eb1efbfa3158,
+        type: 3}
     - target: {fileID: 9099891263257254515, guid: f757ca4c32447a945aeeb8a3e68cf804,
         type: 3}
       propertyPath: m_LocalPosition.x

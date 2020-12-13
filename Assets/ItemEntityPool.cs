@@ -26,12 +26,13 @@ public class ItemEntityPool : MonoBehaviour
         disabledItemEntities = new Queue<ItemEntity>(initQueueSize);
     }
 
-    public void CreateItemEntity(Vector2 position, Item item)
+    public ItemEntity CreateItemEntity(Vector2 position, Item item)
     {
         if(disabledItemEntities.Count == 0)
         {
-            Instantiate(itemEntityPrefab, position, Quaternion.identity).GetComponent<ItemEntity>().UpdateItem(item);
-            
+            ItemEntity newItem = Instantiate(itemEntityPrefab, position, Quaternion.identity).GetComponent<ItemEntity>();
+            newItem.UpdateItem(item);
+            return newItem;
         }
         else
         {
@@ -39,6 +40,7 @@ public class ItemEntityPool : MonoBehaviour
             itemEntity.gameObject.SetActive(true);
             itemEntity.UpdateItem(item);
             itemEntity.transform.position = position;
+            return itemEntity;
         }
     }
 

@@ -341,7 +341,7 @@ MonoBehaviour:
     type: 3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 385
+    m_Bits: 1409
   layerMaskMining:
     serializedVersion: 2
     m_Bits: 385

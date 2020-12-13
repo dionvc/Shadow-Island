@@ -19,6 +19,12 @@ public class AnimationProperties
     }
 }
 
+[System.Serializable]
+public class RotatedSpriteProperties
+{
+    public Sprite[] sprites;
+}
+
 public class AnimationPropertiesPool : MonoBehaviour
 {
 
@@ -37,6 +43,9 @@ public class AnimationPropertiesPool : MonoBehaviour
 
     [SerializeField] List<AnimationProperties> animationProperties;
     public Dictionary<int, AnimationProperties> animationDictionary { get; private set; }
+
+    [SerializeField] List<RotatedSpriteProperties> rotatedSpriteProps;
+    public IReadOnlyList<RotatedSpriteProperties> rotatedSpriteProperties {get {return rotatedSpriteProps.AsReadOnly(); }}
     // Start is called before the first frame update
     void Start()
     {
