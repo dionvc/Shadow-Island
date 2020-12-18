@@ -11,8 +11,8 @@ public class EnemyAllianceController : MonoBehaviour
     public int startingTimeForNewWave { get; private set; } = 18000; //6 minutes until first wave
     public int timeUntilNewWave { get; private set; } = 18000;
     public int minTimePerWave { get; private set; } = 3000;
-    int enemyCountPerWave = 5; //start with one per wave
-    int maxEnemyCountPerWave = 30;
+    int enemyCountPerWave = 2; //start with one per wave
+    int maxEnemyCountPerWave = 25;
     public int wave { get; private set; } = 0;
     GameObject target;
     Alliance enemyAlliance;
