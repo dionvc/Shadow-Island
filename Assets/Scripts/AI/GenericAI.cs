@@ -139,7 +139,7 @@ public class GenericAI : MonoBehaviour
                 {
                     pathToFormation = Pathing.Instance.GetPath(this.transform.position, formationPath.coords, 500, agentSize);
                 }
-                else if(formationPath != null && pathToFormation != null)
+                if(formationPath != null && pathToFormation != null)
                 {
                     aiState = AIState.MovingFormation;
                 }
@@ -235,7 +235,7 @@ public class GenericAI : MonoBehaviour
                 }
 
                 //check for targets nearby, if target found then switch to pursuing
-                counter++;
+                
                 if (counter % checkFrequency == 0)
                 {
                     int nearby = Physics2D.OverlapCircle(this.transform.position, pursueDistance, filter, checkAreaResults);
@@ -253,10 +253,29 @@ public class GenericAI : MonoBehaviour
                     }
                 }
                 //check if was attacked recently and notify formation
-                //if stuck on neutral object try moving perpendicular
-                //if still stuck then destroy
+
+                
 
             }
+
+            counter++;
+            if (counter % checkFrequency == 0)
+            {
+                if ((stuckCheck - this.transform.position).magnitude > stuckSensitivity)
+                {
+                    stuckCheck = this.transform.position;
+                }
+                else
+                {
+                    int stuckCheck = Physics2D.OverlapCircle((Vector2)this.transform.position, 3.0f, filter, checkAreaResults);
+                    if (stuckCheck > 1)
+                    {
+                        actionState = ActionState.Attacking;
+                    }
+                }
+            }
+            //if stuck on neutral object try moving perpendicular
+            //if still stuck then destroy
         }
 
 
@@ -355,6 +374,12 @@ public class GenericAI : MonoBehaviour
     {
         pathToFormation = Pathing.Instance.GetPath(this.transform.position, path.coords, 200, GetAgentSize());
         formationPath = path;
+    }
+
+    public void SetSpeedAndHealth(float speed, float health)
+    {
+        this.GetComponent<Health>().SetMaxHealth(health);
+        entitySpeed = speed;
     }
 
     public int GetAgentSize()

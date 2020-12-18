@@ -14,6 +14,10 @@ public class EnemyAllianceController : MonoBehaviour
     int enemyCountPerWave = 2; //start with one per wave
     int maxEnemyCountPerWave = 25;
     public int wave { get; private set; } = 0;
+    float baseSpeed = 3.0f;
+    float baseHealth = 100;
+    float maxHealth = 500;
+    float maxSpeed = 8.0f;
     GameObject target;
     Alliance enemyAlliance;
     // Start is called before the first frame update
@@ -45,6 +49,11 @@ public class EnemyAllianceController : MonoBehaviour
             wave++;
             int[] coords = CalculateSpawnSquare();
             List<Vector2> spawnLocations = new List<Vector2>();
+            int enemyCountForThisWave = Mathf.RoundToInt(enemyCountPerWave * (TimeKeeper.Instance.GetTimeDayNormalized() / 2.0f + 0.5f));
+            if(enemyCountForThisWave > maxEnemyCountPerWave)
+            {
+                enemyCountForThisWave = maxEnemyCountPerWave;
+            }
             for(int i = 0; i < 32; i ++)
             {
                 for(int j = 0; j < 32; j++)
@@ -61,11 +70,22 @@ public class EnemyAllianceController : MonoBehaviour
             }
             GameObject formationObject = Instantiate(aiFormationPrefab, Vector3.zero, Quaternion.identity);
             AIFormation formation = formationObject.GetComponent<AIFormation>();
+            float waveSpeed = baseSpeed + (3.0f * (wave / 30.0f)); //maxes out at wave 30
+            float waveHealth = baseHealth + (400.0f * (wave / 60.0f)); //maxes out at wave 60
+            if(waveSpeed > maxSpeed)
+            {
+                waveSpeed = maxSpeed;
+            }
+            if(waveHealth > maxHealth)
+            {
+                waveHealth = maxHealth;
+            }
             for(int i = 0; i < spawnLocations.Count; i++)
             {
                 GameObject enemy = Instantiate(enemyPrefab, spawnLocations[i], Quaternion.identity);
                 GenericAI enemyAI = enemy.GetComponent<GenericAI>();
                 enemyAI.SetAlliance(enemyAlliance);
+                enemyAI.SetSpeedAndHealth(waveSpeed, waveHealth);
                 formation.RegisterUnit(enemyAI);
             }
             formation.SetGroupTarget(target);

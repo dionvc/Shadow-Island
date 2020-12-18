@@ -445,7 +445,7 @@ MonoBehaviour:
     - ItemID: 11
       Amount: 1
     Results:
-    - ItemID: 54
+    - ItemID: 52
       Amount: 1
     craftingTime: 150
     craftingTags:
@@ -464,7 +464,7 @@ MonoBehaviour:
     - ItemID: 11
       Amount: 1
     Results:
-    - ItemID: 54
+    - ItemID: 53
       Amount: 1
     craftingTime: 150
     craftingTags:
@@ -890,7 +890,7 @@ MonoBehaviour:
     ammoType: 0
     projectile: {fileID: 0}
     damageType: 3
-    damage: 8
+    damage: 18
     damageRadius: 0.5
     firingRate: 10
     damageableLayers:
@@ -906,7 +906,7 @@ MonoBehaviour:
     ammoType: 0
     projectile: {fileID: 0}
     damageType: 0
-    damage: 16
+    damage: 36
     damageRadius: 0.5
     firingRate: 10
     damageableLayers:

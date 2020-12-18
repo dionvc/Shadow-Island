@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBody: {fileID: 7705490272239524671}
-  playerSpeed: 8
+  playerSpeed: 6
 --- !u!114 &7705490272239524669
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5727317450126460045}
   - component: {fileID: 6180016259539160076}
   - component: {fileID: 7797872355989414384}
-  - component: {fileID: 9166013722657652899}
+  - component: {fileID: 4176522747586952848}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 8, y: 0}
-  m_SizeDelta: {x: 0, y: 24}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 252.75, y: 24}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6180016259539160076
 CanvasRenderer:
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &9166013722657652899
+--- !u!114 &4176522747586952848
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,11 +145,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 171314229881103164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 0
+  m_IgnoreLayout: 0
+  m_MinWidth: 128
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 256
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &990394604297335602
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +251,7 @@ MonoBehaviour:
   m_MinHeight: -1
   m_PreferredWidth: -1
   m_PreferredHeight: 24
-  m_FlexibleWidth: 1
+  m_FlexibleWidth: 128
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
 --- !u!114 &5869351438765224979
@@ -1248,11 +1254,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: -1
+  m_MinWidth: 128
   m_MinHeight: -1
   m_PreferredWidth: -1
   m_PreferredHeight: 24
-  m_FlexibleWidth: -1
+  m_FlexibleWidth: 256
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
 --- !u!1 &4004353259628917262

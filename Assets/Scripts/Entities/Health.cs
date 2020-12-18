@@ -76,4 +76,10 @@ public class Health : MonoBehaviour
     {
         return (health / maxHealth);
     }
+
+    public void SetMaxHealth(float health)
+    {
+        this.maxHealth = health;
+        this.health = health;
+    }
 }
