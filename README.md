@@ -22,6 +22,10 @@ Goal:
 
 Collect resources and build defenses to protect the beacon against enemies.  
 Build machinery like drills and assemblers to help with automating defense.
+Some hints for early game
+  - mine coal and create powder for ammo
+  - mine stone to make a furnace to make iron for ammo
+  - build a Chemical plant as quickly as possible to make lubricating oil from biomass so you can build an electric motor, which is useful for many other things
 
 
 Bugs/Kinda bugs/frustrations:
