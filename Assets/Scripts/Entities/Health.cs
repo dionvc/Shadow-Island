@@ -23,6 +23,7 @@ public class Health : MonoBehaviour
     [SerializeField] float resistanceAcid = 80;
     [SerializeField] ParticleSystemPool.ParticleType damageParticle = ParticleSystemPool.ParticleType.none;
     [SerializeField] Color bloodColor = new Color(1, 1, 1);
+    public GameObject lastDamagedBy = null;
     HealthBar healthBar;
     public int alliance { get; set; } = 0; //0 is neutral always
 
@@ -33,10 +34,10 @@ public class Health : MonoBehaviour
         healthBar.UpdateBar(health / maxHealth);
     }
 
-    public void DealDamage(float damage, DamageType type)
+    public void DealDamage(float damage, DamageType type, GameObject damager)
     {
         float resistanceFactor = 0;
-        switch(type)
+        switch (type)
         {
             case (DamageType.Explosion):
                 resistanceFactor = resistanceExplosion / 100;
@@ -57,12 +58,22 @@ public class Health : MonoBehaviour
                 resistanceFactor = resistanceFire / 100;
                 break;
         }
-        health -= (damage * (1 - resistanceFactor));
-        healthBar.UpdateBar(health / maxHealth);
-        ParticleSystemPool.Instance.EmitParticle(damageParticle, this.transform.position, 1, true, bloodColor);
-        if(health <= 0)
+        float damageAmount = (damage * (1 - resistanceFactor));
+        if (damageAmount > 0)
+        {
+            lastDamagedBy = damager;
+            health -= damageAmount;
+            healthBar.UpdateBar(health / maxHealth);
+            ParticleSystemPool.Instance.EmitParticle(damageParticle, this.transform.position, 1, true, bloodColor);
+        }
+        if (health <= 0)
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public float GetHealthPercentage()
+    {
+        return (health / maxHealth);
     }
 }

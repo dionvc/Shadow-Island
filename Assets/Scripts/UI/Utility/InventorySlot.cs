@@ -5,4 +5,5 @@ using UnityEngine;
 public class InventorySlot : MonoBehaviour
 {
     public int slotID { get; set; }
+    public Item item { get; set; }
 }

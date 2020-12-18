@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7705490271439908290}
   - component: {fileID: 7705490271439908301}
   - component: {fileID: 7705490271439908291}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!50 &7705490272239524671
@@ -339,12 +339,18 @@ MonoBehaviour:
     type: 3}
   ammoInventoryPrefab: {fileID: 6504441796860076964, guid: cd1336d9acd4f2d4daa4d4d0d791feb5,
     type: 3}
+  tooltipPanelPrefab: {fileID: 3093406062526390914, guid: e2cebe46e6f8a3746a0162d4618a2b0f,
+    type: 3}
+  respawnPanelPrefab: {fileID: 5281194784169269303, guid: de02a0cfb008dfa41ac9bd8bbac69c1d,
+    type: 3}
+  filterItemPanelPrefab: {fileID: 3484022950324332986, guid: 1ca62d3c30c28344bb78a6fb72669702,
+    type: 3}
   layerMask:
     serializedVersion: 2
     m_Bits: 1409
   layerMaskMining:
     serializedVersion: 2
-    m_Bits: 385
+    m_Bits: 1409
   mouseInventory: {fileID: 7705490271559096078}
   placeSpritePrefab: {fileID: 74216309571529496, guid: 0ddc1c3607e4bb24ba01718c863c4f43,
     type: 3}
@@ -402,6 +408,7 @@ MonoBehaviour:
   resistanceAcid: 0
   damageParticle: 10
   bloodColor: {r: 0.46764863, g: 0.8773585, b: 0.80907357, a: 1}
+  lastDamagedBy: {fileID: 0}
 --- !u!114 &-7628037255250885927
 MonoBehaviour:
   m_ObjectHideFlags: 0

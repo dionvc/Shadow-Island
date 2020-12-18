@@ -5,13 +5,14 @@ using UnityEngine;
 public class BuildingManager : MonoBehaviour
 {
     [SerializeField] string miningTag = null;
+    [SerializeField] bool centeredOnMineable = false;
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    public bool CheckPlacement(List<Collider2D> collisionList, out List<Mineable> mineableList)
+    public bool CheckPlacement(List<Collider2D> collisionList, out List<Mineable> mineableList, Vector2 placePosition)
     {
         mineableList = new List<Mineable>();
 
@@ -19,7 +20,7 @@ public class BuildingManager : MonoBehaviour
             Mineable mineable;
             if (collisionList[i].gameObject.TryGetComponent(out mineable))
             {
-                if (mineable.miningtag == miningTag)
+                if (mineable.miningtag == miningTag && (centeredOnMineable == false || ((Vector2)mineable.transform.position - placePosition).magnitude < 0.25f))
                 {
                     mineableList.Add(mineable);
                 }

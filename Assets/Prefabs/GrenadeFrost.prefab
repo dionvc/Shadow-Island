@@ -95,13 +95,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d3c2e7e0cf2e24d9c5b3a9c81d57bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 6
   damageRange: 4
   damageLength: 60
   damageType: 2
   layermask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   particleAtLanding: 0
   particleAtDamagable: 3
   particleQuantityPerTick: 1

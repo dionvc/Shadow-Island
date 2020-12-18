@@ -50,11 +50,11 @@ public class ThrownItem : MonoBehaviour
                 {
                     if(damageList[i].gameObject.TryGetComponent(out health))
                     {
-                        health.DealDamage(damage, damageType);
+                        health.DealDamage(damage, damageType, null);
                         ParticleSystemPool.Instance.EmitParticle(particleAtDamagable, damageList[i].transform.position, particleQuantityPerTickAtDamagable);
                     }
                 }
-                ParticleSystemPool.Instance.EmitParticle(particleAtLanding, this.transform.position, particleQuantityPerTick);
+                ParticleSystemPool.Instance.EmitParticle(particleAtLanding, this.transform.position, particleQuantityPerTick, true);
                 damageLength--;
                 if(damageLength <= 0)
                 {

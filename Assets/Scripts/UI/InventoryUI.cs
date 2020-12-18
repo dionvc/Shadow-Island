@@ -84,7 +84,12 @@ public class InventoryUI : MonoBehaviour
             GameObject image = inventorySlot.transform.GetChild(0).gameObject;
             image.SetActive(false);
         }
-        inventorySlot.GetComponent<InventorySlot>().slotID = slotID;
+        InventorySlot invSlot = inventorySlot.GetComponent<InventorySlot>();
+        invSlot.slotID = slotID;
+        if (itemStack != null)
+        {
+            invSlot.item = itemStack.item;
+        }
     }
 
     public void SetViewedInventory(Inventory inventory)

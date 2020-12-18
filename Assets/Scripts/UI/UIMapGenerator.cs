@@ -10,7 +10,9 @@ public class UIMapGenerator : MonoBehaviour
     //Really important things (not sure if its best to have a UI script handling this, but \_(._.)_/ )
     [SerializeField] GameObject mapObjectPrefab = null;
     [SerializeField] GameObject playerPrefab = null;
-
+    [SerializeField] GameObject beaconPrefab = null;
+    [SerializeField] GameObject enemyAllianceControllerPrefab = null;
+    [SerializeField] GameObject waveUIPrefab = null;
     //Actual UI stuff
     [SerializeField] GameObject previewTilePrefab = null;
     [SerializeField] GameObject mapPreviewSelectionPrefab = null;
@@ -56,7 +58,7 @@ public class UIMapGenerator : MonoBehaviour
         generator.SetWidth(xSizeBuffer);
         generator.SetHeight(ySizeBuffer);
         generator.GenerateIslandShape(density);
-        mapPreviewSelection.transform.parent = null;
+        mapPreviewSelection.transform.SetParent(null, false);
         mapPreviewSelection.SetActive(false);
         for(int i = 0; i < previewTiles.Count; i++)
         {
@@ -116,7 +118,7 @@ public class UIMapGenerator : MonoBehaviour
         startingX = location.xPos;
         startingY = location.yPos;
         mapPreviewSelection.SetActive(true);
-        mapPreviewSelection.transform.parent = previewMapSlot.transform;
+        mapPreviewSelection.transform.SetParent(previewMapSlot.transform, false);
         mapPreviewSelection.transform.localPosition = new Vector3(0, 0, 0);
         playButton.interactable = true;
     }
@@ -176,7 +178,19 @@ public class UIMapGenerator : MonoBehaviour
         loadingPanel.GetComponentInChildren<TMP_Text>().SetText("Finishing Up");
         loadingPanelBar.fillAmount = 1;
         GameObject player = Instantiate(playerPrefab, new Vector3(startingX * 32 + 16, startingY * 32 + 16), Quaternion.identity);
-        player.GetComponent<ObjectInteraction>().SetPlaceGrid(mapObjectInstance.GetComponent<Grid>());
+        GameObject beacon = Instantiate(beaconPrefab, new Vector3(startingX * 32 + 16.5f, startingY * 32 + 17.5f), Quaternion.identity);
+        Alliance characterAlliance = new Alliance("Character");
+        characterAlliance.spawnPoint = player.transform.position;
+        beacon.GetComponent<Health>().alliance = characterAlliance.allianceCode;
+        Alliance enemyAlliance = new Alliance("Enemy");
+        GameObject enemyAllianceController = Instantiate(enemyAllianceControllerPrefab, Vector2.zero, Quaternion.identity);
+        enemyAllianceController.GetComponent<EnemyAllianceController>().SetTarget(beacon);
+        enemyAllianceController.GetComponent<EnemyAllianceController>().SetAlliance(enemyAlliance);
+        characterAlliance.SetHostileTowards(enemyAlliance.allianceCode);
+        enemyAlliance.SetHostileTowards(characterAlliance.allianceCode);
+        GameObject waveUI = Instantiate(waveUIPrefab, GameObject.Find("Canvas").transform);
+        waveUI.GetComponent<DefendTheBeaconUI>().SetBeacon(beacon);
+        waveUI.GetComponent<DefendTheBeaconUI>().SetEnemyAllianceController(enemyAllianceController.GetComponent<EnemyAllianceController>());
         yield return new WaitForFixedUpdate();
         //Set generator be destroyed when returning to main menu.
         generator.RemoveFromDontDestroyOnLoad();

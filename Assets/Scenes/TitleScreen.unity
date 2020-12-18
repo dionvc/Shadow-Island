@@ -2249,7 +2249,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1161325840}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.67681485
+  m_Size: 0.67681473
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2325,9 +2325,9 @@ RectTransform:
   m_Father: {fileID: 1837322739}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -33}
   m_SizeDelta: {x: 128, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &700552601
@@ -2597,6 +2597,10 @@ MonoBehaviour:
   mapObjectPrefab: {fileID: 8817132983252528892, guid: 7cc5406937638c94599b67eeeac654e1,
     type: 3}
   playerPrefab: {fileID: 7705490272239524666, guid: 6748400d52886d24594fdd461bc68ff8,
+    type: 3}
+  beaconPrefab: {fileID: 1256533850002079172, guid: 9535d92d74320354aa58f5f0478c8541,
+    type: 3}
+  enemyAllianceControllerPrefab: {fileID: 7783691637826053256, guid: 0303db37e0f8eeb46b41bb3c0c98c8cb,
     type: 3}
   previewTilePrefab: {fileID: 1827019999860479443, guid: 2eebf4570e1393f419df5db08430ef80,
     type: 3}
@@ -3007,9 +3011,9 @@ RectTransform:
   m_Father: {fileID: 1837322739}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -133}
   m_SizeDelta: {x: 128, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &894916488
@@ -3143,9 +3147,9 @@ RectTransform:
   m_Father: {fileID: 1837322739}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 80, y: -83}
   m_SizeDelta: {x: 128, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &936353405
@@ -3456,7 +3460,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 168686619}
   m_HandleRect: {fileID: 168686618}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -6373,9 +6377,9 @@ MonoBehaviour:
   - bindingName: Open Crafting
     keycode: 113
   - bindingName: Toggle Health
-    keycode: 9
+    keycode: 120
   - bindingName: Toggle Time
-    keycode: 114
+    keycode: 99
   - bindingName: Options Menu
     keycode: 27
   - bindingName: Change Ammo

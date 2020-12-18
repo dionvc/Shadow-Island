@@ -21,17 +21,19 @@ public class ItemAmmo : Item
     public FireType fireType;
     public AmmoType ammoType;
     public GameObject projectile; //implement projectile class
-    public Health.DamageType damageType; //hitscan only
+    public Health.DamageType damageType; //hitscan only - but used for tooltip so should be set for projectiles just for tooltip
     public float damage;
     public float damageRadius; //the circular area enclosing damage targets
+    public float firingRate; //base firing rate in terms of ticks to pass per fire - can be modified by multiplier of firing entity
     ContactFilter2D filter;
+    [SerializeField] LayerMask damageableLayers;
     Collider2D[] results = new Collider2D[10];
 
     public void OnFire(Health target, GameObject origin)
     {
         if(fireType == FireType.Hitscan)
         {
-            target.DealDamage(damage, damageType);
+            target.DealDamage(damage, damageType, origin);
         }
         else
         {
@@ -50,7 +52,7 @@ public class ItemAmmo : Item
                 Health health;
                 if(results[i].TryGetComponent(out health))
                 {
-                    health.DealDamage(damage, damageType);
+                    health.DealDamage(damage, damageType, origin);
                 }
             }
         }
@@ -62,8 +64,8 @@ public class ItemAmmo : Item
 
     public void InitializeFilter()
     {
-        ContactFilter2D filter = new ContactFilter2D();
+        filter = new ContactFilter2D();
         filter.useLayerMask = true;
-        filter.layerMask = 1 << LayerMask.NameToLayer("Damageable");
+        filter.layerMask = damageableLayers;
     }
 }

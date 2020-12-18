@@ -176,7 +176,7 @@ public class GeneratorObjects : MonoBehaviour
     private int SamplePerlinOreAmount(int index, int x, int y, int sizeX, int sizeY, float perlinValue)
     {
         float diff = perlinValue - oreValues[index];
-        int amount = (int) (diff * 500);
+        int amount = (int) (diff * 1500);
         return (int)Mathf.Pow(amount, 1.5f) + 1;
     }
 }

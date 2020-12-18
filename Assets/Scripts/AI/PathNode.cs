@@ -5,6 +5,7 @@ using UnityEngine;
 public class PathNode
 {
     public PathNode parentNode;
+    public PathNode nextNode;
     public float cost;
     public float heuristic;
     public float begin;

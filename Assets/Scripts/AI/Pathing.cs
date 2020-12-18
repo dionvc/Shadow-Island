@@ -31,6 +31,7 @@ public class Pathing : MonoBehaviour
     #endregion
 
     int[][] distToObstacle;
+    Generator.LandNode[][] broadScaleMap;
 
     [SerializeField] Grid tileGrid;
     /// <summary>
@@ -112,7 +113,20 @@ public class Pathing : MonoBehaviour
                 }
             }
         }
-        return endNode;
+        PathNode iterNode = endNode;
+        if (endNode != null && endNode.parentNode != null)
+        {
+            iterNode = endNode.parentNode;
+            PathNode lastNode = endNode;
+            while (iterNode.parentNode != null)
+            {
+                iterNode.parentNode.nextNode = iterNode;
+                lastNode = iterNode;
+                iterNode = iterNode.parentNode;
+            }
+            iterNode.nextNode = lastNode;
+        }
+        return iterNode;
     }
 
     private float CalculateHeuristic(Vector3 start, Vector3 target)
@@ -142,6 +156,11 @@ public class Pathing : MonoBehaviour
     public void SetUnpathableLocation(int x, int y)
     {
         distToObstacle[x][y] = -1;
+    }
+
+    public int GetLocationPathValue(int x, int y)
+    {
+        return distToObstacle[x][y];
     }
 
     /// <summary>
@@ -226,6 +245,16 @@ public class Pathing : MonoBehaviour
             }
         }
         return distToObstacle[x][y] >= agentSize;
+    }
+
+    public void SetBroadScaleMap(Generator.LandNode[][] broadScaleMap)
+    {
+        this.broadScaleMap = broadScaleMap;
+    }
+
+    public Generator.LandNode[][] GetBroadScaleMap()
+    {
+        return broadScaleMap;
     }
     /*
     private void OnDrawGizmos()

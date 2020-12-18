@@ -572,6 +572,7 @@ public class Generator : MonoBehaviour
             }
         }
         Pathing.Instance.CalculatePathablity(sizeX * 32, sizeY * 32);
+        Pathing.Instance.SetBroadScaleMap(this.landNodes);
     }
 
     public LandNode GetLandNode(int x, int y)

@@ -98,4 +98,44 @@ public class InventoryFixed : Inventory
         }
         return itemStack;
     }
+
+    public override ItemEntity GetOutputItemEntity(Vector2 position, int filter)
+    {
+        for (int i = 0; i < outputInventory.Count; i++)
+        {
+            if (outputInventory[i] != null && (filter == -1 || outputInventory[i].item.id == filter))
+            {
+                outputInventory[i].size--;
+                Item item = outputInventory[i].item;
+                if (outputInventory[i].size == 0)
+                {
+                    outputInventory[i] = null;
+                }
+                return ItemEntityPool.Instance.CreateItemEntity(position, item);
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// TODO: probably broken
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public override bool TryInsertItem(Item item)
+    {
+        for (int i = 0; i < inputInventory.Count; i++)
+        {
+            if ((inputInventory[i] == null || (inputInventory[i].size < item.maxStack && inputInventory[i].item.id == item.id)))
+            {
+                if (inputInventory[i] == null)
+                {
+                    inputInventory[i] = new ItemStack(item, 0);
+                }
+                inputInventory[i].size++;
+                return true;
+            }
+        }
+        return false;
+    }
 }

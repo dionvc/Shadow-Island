@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9099891263257254514}
   - component: {fileID: 9099891263257254513}
   - component: {fileID: 9099891265365947349}
+  - component: {fileID: 6773098610052275872}
   m_Layer: 0
   m_Name: Definitions
   m_TagString: Untagged
@@ -129,11 +130,11 @@ MonoBehaviour:
     name: Stone Furnace
     Ingredients:
     - ItemID: 0
-      Amount: 10
+      Amount: 5
     Results:
     - ItemID: 59
       Amount: 1
-    craftingTime: 240
+    craftingTime: 50
     craftingTags:
     - character
     - assembler
@@ -142,178 +143,721 @@ MonoBehaviour:
     name: Stone Wall
     Ingredients:
     - ItemID: 0
-      Amount: 10
+      Amount: 5
     Results:
     - ItemID: 50
       Amount: 1
+    craftingTime: 25
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 8
+    recipeSprite: {fileID: 21300000, guid: d15ecd3d95fb94241b082360941ad985, type: 3}
+    name: Bearing
+    Ingredients:
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 5
+      Amount: 1
+    Results:
+    - ItemID: 9
+      Amount: 1
     craftingTime: 120
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 9
+    recipeSprite: {fileID: 21300000, guid: 0d3ba1f4eb9b9eb4780bdf8a11949133, type: 3}
+    name: Copper Wire
+    Ingredients:
+    - ItemID: 6
+      Amount: 2
+    Results:
+    - ItemID: 8
+      Amount: 1
+    craftingTime: 25
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 10
+    recipeSprite: {fileID: 21300000, guid: 42d7dce79f7eca84b98c3346e49f1e6f, type: 3}
+    name: Silicon Wafer
+    Ingredients:
+    - ItemID: 18
+      Amount: 2
+    Results:
+    - ItemID: 14
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 11
+    recipeSprite: {fileID: 21300000, guid: 7ec6225381a46194ab99b63192986dfc, type: 3}
+    name: Logic Unit
+    Ingredients:
+    - ItemID: 14
+      Amount: 1
+    - ItemID: 8
+      Amount: 2
+    - ItemID: 13
+      Amount: 1
+    Results:
+    - ItemID: 11
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 12
+    recipeSprite: {fileID: 21300000, guid: 38b4ce2f333ef2d44a5f7f0f50aebc2d, type: 3}
+    name: Ceramic
+    Ingredients:
+    - ItemID: 18
+      Amount: 4
+    Results:
+    - ItemID: 12
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - smelter
+  - recipeID: 13
+    recipeSprite: {fileID: 21300000, guid: 7ec50789e773d214c95d17073003f4bb, type: 3}
+    name: Chemical Plant
+    Ingredients:
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 8
+      Amount: 1
+    - ItemID: 12
+      Amount: 1
+    Results:
+    - ItemID: 58
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 14
+    recipeSprite: {fileID: 21300000, guid: 0a74fe17043499e4e915494ef4dc1e9c, type: 3}
+    name: Chest
+    Ingredients:
+    - ItemID: 7
+      Amount: 2
+    Results:
+    - ItemID: 61
+      Amount: 1
+    craftingTime: 25
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 15
+    recipeSprite: {fileID: 21300000, guid: 2f3d88c2a85058f45ad9bb4a2f629d62, type: 3}
+    name: Refine Biomass to lubricating oil
+    Ingredients:
+    - ItemID: 15
+      Amount: 1
+    Results:
+    - ItemID: 21
+      Amount: 1
+    craftingTime: 200
+    craftingTags:
+    - chemplant
+  - recipeID: 16
+    recipeSprite: {fileID: 21300000, guid: 67514e023a0f0ef479af0cebd1f9ada1, type: 3}
+    name: Refine Biomass to Naptha Gas
+    Ingredients:
+    - ItemID: 15
+      Amount: 1
+    Results:
+    - ItemID: 19
+      Amount: 1
+    craftingTime: 200
+    craftingTags:
+    - chemplant
+  - recipeID: 17
+    recipeSprite: {fileID: 21300000, guid: da31ee259acaf154699d9d6be913baaa, type: 3}
+    name: Oil Processing
+    Ingredients:
+    - ItemID: 20
+      Amount: 1
+    Results:
+    - ItemID: 19
+      Amount: 1
+    - ItemID: 21
+      Amount: 1
+    - ItemID: 22
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - chemplant
+  - recipeID: 18
+    recipeSprite: {fileID: 21300000, guid: c8fc1bf628d2f9446920912fd41b17ba, type: 3}
+    name: Plastic
+    Ingredients:
+    - ItemID: 19
+      Amount: 1
+    Results:
+    - ItemID: 13
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - chemplant
+  - recipeID: 19
+    recipeSprite: {fileID: 21300000, guid: 6936cc6836b6e7e44a826dc9b2e12b2f, type: 3}
+    name: Electric Motor
+    Ingredients:
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 7
+      Amount: 2
+    - ItemID: 9
+      Amount: 2
+    - ItemID: 21
+      Amount: 1
+    Results:
+    - ItemID: 10
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 20
+    recipeSprite: {fileID: 21300000, guid: eb1575aeba1ae534ba92627c6a1df65b, type: 3}
+    name: Explosive Paste
+    Ingredients:
+    - ItemID: 19
+      Amount: 1
+    - ItemID: 17
+      Amount: 1
+    Results:
+    - ItemID: 23
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - chemplant
+  - recipeID: 21
+    recipeSprite: {fileID: 21300000, guid: 3e092fee4d3c36a4ea1caf17db93d8fa, type: 3}
+    name: Mining Drill
+    Ingredients:
+    - ItemID: 9
+      Amount: 2
+    - ItemID: 10
+      Amount: 1
+    - ItemID: 7
+      Amount: 2
+    Results:
+    - ItemID: 51
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 22
+    recipeSprite: {fileID: 21300000, guid: 08a945b63185a4a4e9afe7b413e2f66d, type: 3}
+    name: Conveyor Belt
+    Ingredients:
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 9
+      Amount: 1
+    Results:
+    - ItemID: 60
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 23
+    recipeSprite: {fileID: 21300000, guid: 6848b2e61fb96f94583fffa9af031fa9, type: 3}
+    name: Loader
+    Ingredients:
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 9
+      Amount: 1
+    Results:
+    - ItemID: 62
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 24
+    recipeSprite: {fileID: 21300000, guid: 0c31e9ec1ba6c7749b027e1f8270ebd5, type: 3}
+    name: Splitter
+    Ingredients:
+    - ItemID: 5
+      Amount: 4
+    - ItemID: 11
+      Amount: 1
+    - ItemID: 10
+      Amount: 1
+    Results:
+    - ItemID: 63
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 25
+    recipeSprite: {fileID: 21300000, guid: 326fd7e95d83c704ab54375322fafe12, type: 3}
+    name: Underground Conveyor Belt
+    Ingredients:
+    - ItemID: 60
+      Amount: 5
+    - ItemID: 7
+      Amount: 2
+    Results:
+    - ItemID: 64
+      Amount: 2
+    craftingTime: 200
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 26
+    recipeSprite: {fileID: 21300000, guid: 0ecbecb023646f449b56eaefb8405081, type: 3}
+    name: Concrete Wall
+    Ingredients:
+    - ItemID: 18
+      Amount: 3
+    - ItemID: 7
+      Amount: 2
+    Results:
+    - ItemID: 54
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 27
+    recipeSprite: {fileID: 21300000, guid: 34635a2d0588bc448ae9c3d7afbd26bf, type: 3}
+    name: Assembler
+    Ingredients:
+    - ItemID: 7
+      Amount: 2
+    - ItemID: 10
+      Amount: 1
+    - ItemID: 11
+      Amount: 1
+    Results:
+    - ItemID: 54
+      Amount: 1
+    craftingTime: 150
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 28
+    recipeSprite: {fileID: 21300000, guid: 16c58c430ae150c4582f7b7523b675c7, type: 3}
+    name: Gun Turret
+    Ingredients:
+    - ItemID: 7
+      Amount: 4
+    - ItemID: 9
+      Amount: 2
+    - ItemID: 10
+      Amount: 1
+    - ItemID: 11
+      Amount: 1
+    Results:
+    - ItemID: 54
+      Amount: 1
+    craftingTime: 150
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 29
+    recipeSprite: {fileID: 21300000, guid: 79655dd689ffa094ba552f221e99445c, type: 3}
+    name: Macerator
+    Ingredients:
+    - ItemID: 7
+      Amount: 4
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 10
+      Amount: 1
+    - ItemID: 12
+      Amount: 1
+    Results:
+    - ItemID: 55
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 30
+    recipeSprite: {fileID: 21300000, guid: 9c5c905bd76c4ac48b390673d21b9f30, type: 3}
+    name: Smelter
+    Ingredients:
+    - ItemID: 5
+      Amount: 4
+    - ItemID: 7
+      Amount: 2
+    - ItemID: 12
+      Amount: 2
+    Results:
+    - ItemID: 56
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 31
+    recipeSprite: {fileID: 21300000, guid: 8ec984fc6051b22469b6292ffbd248a9, type: 3}
+    name: Oil Derrick
+    Ingredients:
+    - ItemID: 5
+      Amount: 4
+    - ItemID: 7
+      Amount: 2
+    - ItemID: 10
+      Amount: 1
+    - ItemID: 11
+      Amount: 1
+    Results:
+    - ItemID: 57
+      Amount: 1
+    craftingTime: 100
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 32
+    recipeSprite: {fileID: 21300000, guid: b8cf08dcb882cae419923a54a885bcd5, type: 3}
+    name: Ammo
+    Ingredients:
+    - ItemID: 5
+      Amount: 2
+    - ItemID: 17
+      Amount: 1
+    Results:
+    - ItemID: 200
+      Amount: 10
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 33
+    recipeSprite: {fileID: 21300000, guid: 470c748d0f2bf3343ad06dff76c1f2bf, type: 3}
+    name: Piercing Ammo
+    Ingredients:
+    - ItemID: 7
+      Amount: 2
+    - ItemID: 23
+      Amount: 1
+    Results:
+    - ItemID: 201
+      Amount: 10
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 34
+    recipeSprite: {fileID: 21300000, guid: 8e3c8c1292e8b664bab52922a55da396, type: 3}
+    name: Grenade
+    Ingredients:
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 23
+      Amount: 2
+    Results:
+    - ItemID: 100
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 35
+    recipeSprite: {fileID: 21300000, guid: a3f23e408144ccd4f9385676ffa33aab, type: 3}
+    name: Poison Grenade
+    Ingredients:
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 22
+      Amount: 1
+    - ItemID: 23
+      Amount: 1
+    Results:
+    - ItemID: 102
+      Amount: 1
+    craftingTime: 50
+    craftingTags:
+    - character
+    - assembler
+  - recipeID: 36
+    recipeSprite: {fileID: 21300000, guid: 9d030e5c8684f3c4e8ab8fb7c364f7de, type: 3}
+    name: Frost Grenade
+    Ingredients:
+    - ItemID: 7
+      Amount: 1
+    - ItemID: 19
+      Amount: 1
+    - ItemID: 23
+      Amount: 1
+    Results:
+    - ItemID: 101
+      Amount: 1
+    craftingTime: 50
     craftingTags:
     - character
     - assembler
   ItemDefinitions:
   - itemSprite: {fileID: 21300000, guid: d26aa4e47525e654f8ba4442fbf1cfdc, type: 3}
     name: Stone
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 100
+    maxStack: 200
     id: 0
   - itemSprite: {fileID: 21300000, guid: 7d9d8eb5aaea28d43ac42c372501c918, type: 3}
     name: Iron Ore
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 100
+    maxStack: 200
     id: 1
   - itemSprite: {fileID: 21300000, guid: 9680c5b85c5bb484191c874ddb13c057, type: 3}
     name: Copper Ore
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 100
+    maxStack: 200
     id: 2
   - itemSprite: {fileID: 21300000, guid: 3f5b6df712e52044aa0815a8501670c5, type: 3}
     name: Coal
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 100
+    maxStack: 200
     id: 3
   - itemSprite: {fileID: 21300000, guid: a0c9d8b2146570942aa6d27b7f28bc1a, type: 3}
     name: Log
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 4
   - itemSprite: {fileID: 21300000, guid: 2081a870291024e45932620615d90c6c, type: 3}
     name: Iron Bar
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 20
+    maxStack: 200
     id: 5
   - itemSprite: {fileID: 21300000, guid: 4862f4c1cebbb3444af415f1d8cf1a8d, type: 3}
     name: Copper Bar
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 20
+    maxStack: 200
     id: 6
   - itemSprite: {fileID: 21300000, guid: da4fe5fac3e9b1042a4106091e852df7, type: 3}
     name: Steel Plate
+    description: 
     placeableResult: {fileID: 0}
-    maxStack: 20
+    maxStack: 100
     id: 7
   - itemSprite: {fileID: 21300000, guid: 0d3ba1f4eb9b9eb4780bdf8a11949133, type: 3}
     name: Copper Wire
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 8
   - itemSprite: {fileID: 21300000, guid: d15ecd3d95fb94241b082360941ad985, type: 3}
     name: Steel Bearing
+    description: A bearing used for moving parts
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 9
   - itemSprite: {fileID: 21300000, guid: 6936cc6836b6e7e44a826dc9b2e12b2f, type: 3}
     name: Electric Motor
+    description: An electric motor
     placeableResult: {fileID: 0}
     maxStack: 50
     id: 10
   - itemSprite: {fileID: 21300000, guid: 7ec6225381a46194ab99b63192986dfc, type: 3}
     name: Logic Unit
+    description: A chip capable of operating machinery
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 11
   - itemSprite: {fileID: 21300000, guid: 38b4ce2f333ef2d44a5f7f0f50aebc2d, type: 3}
     name: Ceramic
+    description: A high strength ceramic plate
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 12
   - itemSprite: {fileID: 21300000, guid: c8fc1bf628d2f9446920912fd41b17ba, type: 3}
     name: Plastic
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 13
   - itemSprite: {fileID: 21300000, guid: 42d7dce79f7eca84b98c3346e49f1e6f, type: 3}
     name: Silicon Board
+    description: Used to create logic units
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 14
   - itemSprite: {fileID: 21300000, guid: c50a4b6f4670ef247a0dcd4a0bae6ebf, type: 3}
     name: Biomass
+    description: Can be refined into plastic
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 15
   - itemSprite: {fileID: 21300000, guid: 60e2c7306a2d7ec4a9eabae53146a08c, type: 3}
     name: Magic Essence
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 16
   - itemSprite: {fileID: 21300000, guid: 608d525abb4ccb9489440acef94ac28a, type: 3}
     name: Coal Powder
+    description: Useful for explosives
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 17
   - itemSprite: {fileID: 21300000, guid: 612baadba1cc1104f989097353da3bf0, type: 3}
     name: Stone Powder
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 18
-  - itemSprite: {fileID: 0}
-    name: Null Item
+  - itemSprite: {fileID: 21300000, guid: 67514e023a0f0ef479af0cebd1f9ada1, type: 3}
+    name: Naptha
+    description: Used to make plastic
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 19
+  - itemSprite: {fileID: 21300000, guid: da31ee259acaf154699d9d6be913baaa, type: 3}
+    name: Oil
+    description: 
+    placeableResult: {fileID: 0}
+    maxStack: 100
+    id: 20
+  - itemSprite: {fileID: 21300000, guid: 2f3d88c2a85058f45ad9bb4a2f629d62, type: 3}
+    name: Lubricating Oil
+    description: Lubricates parts
+    placeableResult: {fileID: 0}
+    maxStack: 100
+    id: 21
+  - itemSprite: {fileID: 21300000, guid: 928894717dbd67b41b13841a88b40354, type: 3}
+    name: Sulfuric Acid
+    description: Explosives can be made
+    placeableResult: {fileID: 0}
+    maxStack: 100
+    id: 22
+  - itemSprite: {fileID: 21300000, guid: eb1575aeba1ae534ba92627c6a1df65b, type: 3}
+    name: Explosive Paste
+    description: Malleable Explosive Charge
+    placeableResult: {fileID: 0}
+    maxStack: 50
+    id: 23
   - itemSprite: {fileID: 21300000, guid: 1c068995e6d4d244993b6dabdea93a2c, type: 3}
     name: Stone Wall
+    description: Provides defense
     placeableResult: {fileID: 7358519552747019113, guid: 1cd9fc9aaede71b4b88150ac75bb5a36,
       type: 3}
     maxStack: 100
     id: 50
   - itemSprite: {fileID: 21300000, guid: 3e092fee4d3c36a4ea1caf17db93d8fa, type: 3}
     name: Drill
+    description: Mines ore
     placeableResult: {fileID: 497351569967024543, guid: eba074c70e7986a4192b0c61d20443b1,
       type: 3}
     maxStack: 20
     id: 51
   - itemSprite: {fileID: 21300000, guid: 34635a2d0588bc448ae9c3d7afbd26bf, type: 3}
     name: Assembler
+    description: Capable of assembling components and buildings
     placeableResult: {fileID: 5414615533044171110, guid: 28b9186acc4243c419b6240d05f681ab,
       type: 3}
     maxStack: 20
     id: 52
   - itemSprite: {fileID: 21300000, guid: 16c58c430ae150c4582f7b7523b675c7, type: 3}
     name: Gun Turret
+    description: Autonomously attacks hostiles
     placeableResult: {fileID: 196039349510428047, guid: b8ffced940e8e4a489e9623d2e1a3d98,
       type: 3}
     maxStack: 20
     id: 53
   - itemSprite: {fileID: 21300000, guid: 0ecbecb023646f449b56eaefb8405081, type: 3}
     name: Concrete Wall
+    description: Provides improved defense
     placeableResult: {fileID: 3843663083192256563, guid: 0e67dcd343427d74dad1efc8831a0a0e,
       type: 3}
     maxStack: 100
     id: 54
   - itemSprite: {fileID: 21300000, guid: 79655dd689ffa094ba552f221e99445c, type: 3}
     name: Macerator
+    description: Grinds materials into powder
     placeableResult: {fileID: 7060530382687433185, guid: c718bea09056d784aaa55198a80fa8c4,
       type: 3}
     maxStack: 20
     id: 55
   - itemSprite: {fileID: 21300000, guid: 9c5c905bd76c4ac48b390673d21b9f30, type: 3}
     name: Smelter
+    description: Melts down ores faster
     placeableResult: {fileID: 5873505172945124083, guid: 1c591965959f54d4eac50e988a60d20e,
       type: 3}
     maxStack: 20
     id: 56
   - itemSprite: {fileID: 21300000, guid: 8ec984fc6051b22469b6292ffbd248a9, type: 3}
     name: Oil Derrick
+    description: Extracts oil from oil patches
     placeableResult: {fileID: 8725183619835397049, guid: 0c2eb50b05f5a7d46967c505693808a9,
       type: 3}
     maxStack: 20
     id: 57
   - itemSprite: {fileID: 21300000, guid: 7ec50789e773d214c95d17073003f4bb, type: 3}
     name: Chemical Plant
+    description: Refines oil products and biomass
     placeableResult: {fileID: 3251001338212969329, guid: 6ce1bdaf8f7d3ca43952928432ce707a,
       type: 3}
     maxStack: 20
     id: 58
   - itemSprite: {fileID: 21300000, guid: 837f5ebf1492cb246b83d58b2fef43ad, type: 3}
     name: Stone Smelter
+    description: Melts down ores
     placeableResult: {fileID: 9130534266995008540, guid: d91fa399e7989834a9a0c720ae67e2bf,
       type: 3}
     maxStack: 20
     id: 59
+  - itemSprite: {fileID: 21300000, guid: 18d6106a01b8b63408f1eb1efbfa3158, type: 3}
+    name: ConveyorBelt
+    description: Moves resources
+    placeableResult: {fileID: 6879029174230821201, guid: 8ffe084d13973bc479140529bb19caa5,
+      type: 3}
+    maxStack: 100
+    id: 60
+  - itemSprite: {fileID: 21300000, guid: 0a74fe17043499e4e915494ef4dc1e9c, type: 3}
+    name: Chest
+    description: Stores resources
+    placeableResult: {fileID: 2502927830653678390, guid: ca73336374dab9e4db87769b22179396,
+      type: 3}
+    maxStack: 50
+    id: 61
+  - itemSprite: {fileID: 21300000, guid: 323e86bdaeedcaf4d8338f0448762713, type: 3}
+    name: Loader
+    description: Loads and unloads resources from buildings
+    placeableResult: {fileID: 8942569213450551955, guid: e19382bee4f856a4480c7935d5f62c76,
+      type: 3}
+    maxStack: 50
+    id: 62
+  - itemSprite: {fileID: 21300000, guid: 0c31e9ec1ba6c7749b027e1f8270ebd5, type: 3}
+    name: Splitter
+    description: Splits belts of items into two belts
+    placeableResult: {fileID: 8897171888053173148, guid: 6e4ff63532946fc45a2ff6f332b3f202,
+      type: 3}
+    maxStack: 50
+    id: 63
+  - itemSprite: {fileID: 21300000, guid: 6adf2b6dc9d786f41b7226b89564e2c3, type: 3}
+    name: Underground Belt
+    description: Transports items on a belt underground
+    placeableResult: {fileID: 9166753478485012913, guid: f26aaeaf9f14c0b47b99381eea11bb78,
+      type: 3}
+    maxStack: 50
+    id: 64
   ItemThrowableDefintions:
   - itemSprite: {fileID: 21300000, guid: 8e3c8c1292e8b664bab52922a55da396, type: 3}
     name: Grenade
+    description: Deals explosive damage to enemies
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 100
@@ -321,14 +865,24 @@ MonoBehaviour:
       type: 3}
   - itemSprite: {fileID: 21300000, guid: 9d030e5c8684f3c4e8ab8fb7c364f7de, type: 3}
     name: Frost Grenade
+    description: Freezes an area
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 101
     thrownResult: {fileID: 1103942601148465191, guid: 8bbd5cd4167049141b215433c222a973,
       type: 3}
+  - itemSprite: {fileID: 21300000, guid: a3f23e408144ccd4f9385676ffa33aab, type: 3}
+    name: Poison Grenade
+    description: Poisons an area
+    placeableResult: {fileID: 0}
+    maxStack: 100
+    id: 102
+    thrownResult: {fileID: 8270175531586075112, guid: 2e2c35081ef590744a837a4a5e5be919,
+      type: 3}
   ItemAmmoDefinitions:
   - itemSprite: {fileID: 21300000, guid: b8cf08dcb882cae419923a54a885bcd5, type: 3}
     name: Ammo
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 200
     id: 200
@@ -336,21 +890,31 @@ MonoBehaviour:
     ammoType: 0
     projectile: {fileID: 0}
     damageType: 3
-    damage: 4
+    damage: 8
     damageRadius: 0.5
+    firingRate: 10
+    damageableLayers:
+      serializedVersion: 2
+      m_Bits: 1280
   - itemSprite: {fileID: 21300000, guid: 470c748d0f2bf3343ad06dff76c1f2bf, type: 3}
     name: Piercing Ammo
+    description: Improved bullet damage
     placeableResult: {fileID: 0}
     maxStack: 200
     id: 201
     fireType: 1
     ammoType: 0
     projectile: {fileID: 0}
-    damageType: 3
-    damage: 4
+    damageType: 0
+    damage: 16
     damageRadius: 0.5
+    firingRate: 10
+    damageableLayers:
+      serializedVersion: 2
+      m_Bits: 1280
   - itemSprite: {fileID: 21300000, guid: 85f74d01508c26e41a1d64cb9135e63c, type: 3}
     name: Rocket
+    description: 
     placeableResult: {fileID: 0}
     maxStack: 100
     id: 202
@@ -358,8 +922,12 @@ MonoBehaviour:
     ammoType: 0
     projectile: {fileID: 0}
     damageType: 0
-    damage: 0
-    damageRadius: 0
+    damage: 50
+    damageRadius: 4
+    firingRate: 25
+    damageableLayers:
+      serializedVersion: 2
+      m_Bits: 0
 --- !u!114 &9099891263257254514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,6 +994,31 @@ MonoBehaviour:
     - turretdown
     - turretdownright
     animationHashCodes: 
+  rotatedSpriteProps:
+  - sprites:
+    - {fileID: 21300000, guid: 08a945b63185a4a4e9afe7b413e2f66d, type: 3}
+    - {fileID: 21300000, guid: f2bbfc67f7abe8643a14041efeaba199, type: 3}
+    - {fileID: 21300000, guid: d4e070a3a9fffad4382273e11f12d3b3, type: 3}
+    - {fileID: 21300000, guid: 18d6106a01b8b63408f1eb1efbfa3158, type: 3}
+  - sprites:
+    - {fileID: 21300000, guid: 6848b2e61fb96f94583fffa9af031fa9, type: 3}
+    - {fileID: 21300000, guid: 2aa67f467656b0442877474a95ca2ccf, type: 3}
+    - {fileID: 21300000, guid: 35dd59af8ed1bef43a914d37cfad3a22, type: 3}
+    - {fileID: 21300000, guid: 323e86bdaeedcaf4d8338f0448762713, type: 3}
+  - sprites:
+    - {fileID: 21300000, guid: 0c31e9ec1ba6c7749b027e1f8270ebd5, type: 3}
+    - {fileID: 21300000, guid: b58553eccf07f16419ab01a545f5796b, type: 3}
+    - {fileID: 21300000, guid: 486cd4903dfc50748a991b6dc29a5039, type: 3}
+    - {fileID: 21300000, guid: d6eb52224717ffd419f5660d573bba16, type: 3}
+  - sprites:
+    - {fileID: 21300000, guid: c895322a2c7c158419a19ed14bcb0613, type: 3}
+    - {fileID: 21300000, guid: 116dffb3b4b6dea4abf6acff0ec3edde, type: 3}
+    - {fileID: 21300000, guid: 6adf2b6dc9d786f41b7226b89564e2c3, type: 3}
+    - {fileID: 21300000, guid: e2d327f906ee2e243b3703892e8e6f73, type: 3}
+    - {fileID: 21300000, guid: 326fd7e95d83c704ab54375322fafe12, type: 3}
+    - {fileID: 21300000, guid: 54ddcb6c8047cda43b89e7f387b574a4, type: 3}
+    - {fileID: 21300000, guid: 45194ac0af790184b8a9daa53972cc87, type: 3}
+    - {fileID: 21300000, guid: 6ca9ad4d6ee9d9c43b8aa682711febe0, type: 3}
 --- !u!114 &9099891265365947349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,3 +1031,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1201131c6463284abf1cd67111adff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6773098610052275872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9099891263257254477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2032c4b5b76d03347aabe5e3d861b781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initQueueSize: 1000
+  itemEntityPrefab: {fileID: 2538996935047355314, guid: e6f36b8149d6120479c120a255018b19,
+    type: 3}

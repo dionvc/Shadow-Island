@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+/// <summary>
+/// Basically does everything interaction-wise with the game (interact with objects, communicate with UI, mine items, fire weapons).
+/// whoops.  Later I can try to divide functionality.  At least it doesn't also do movement.
+/// </summary>
 public class ObjectInteraction : MonoBehaviour
 {
     //UI components
@@ -12,12 +16,27 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] GameObject craftingPanelPrefab;
     [SerializeField] GameObject mouseInventoryPrefab;
     [SerializeField] GameObject ammoInventoryPrefab;
+    [SerializeField] GameObject tooltipPanelPrefab;
+    [SerializeField] GameObject respawnPanelPrefab;
+    [SerializeField] GameObject filterItemPanelPrefab;
     MachineUI machineUI;
     InventoryUI inventoryInteractUI;
     InventoryUI inventoryUI;
     InventoryUI inventoryAmmoUI;
     CraftingUI craftingUI;
     HighlightSlotUI ammoSlotSelected;
+    UIFilterItem filterItemUI;
+
+    GameObject machinePanelInteract;
+    GameObject inventoryInteract;
+    GameObject inventoryPanel;
+    GameObject craftingPanel;
+    GameObject inventoryAmmo;
+    GameObject mouseInventoryUI;
+    GameObject tooltip;
+    GameObject filterItemPanel;
+
+    GameObject canvas;
 
     //Raycast variables
     [SerializeField] LayerMask layerMask;
@@ -80,19 +99,25 @@ public class ObjectInteraction : MonoBehaviour
         placeSpriteRenderer = placeSprite.GetComponent<SpriteRenderer>();
         Camera.main.GetComponent<CameraFollow>().SetCameraTarget(this.gameObject);
 
-        GameObject canvas = GameObject.Find("Canvas");
-        GameObject machinePanelInteract = Instantiate(machinePanelInteractPrefab, canvas.transform);
-        GameObject inventoryInteract = Instantiate(inventoryPanelInteractPrefab, canvas.transform);
-        GameObject inventoryPanel = Instantiate(inventoryPanelPrefab, canvas.transform);
-        GameObject craftingPanel = Instantiate(craftingPanelPrefab, canvas.transform);
-        GameObject inventoryAmmo = Instantiate(ammoInventoryPrefab, canvas.transform);
-        Instantiate(mouseInventoryPrefab, canvas.transform).GetComponent<InventoryMouse>().SetInventory(mouseInventory);
+        placeGrid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+        canvas = GameObject.Find("Canvas");
+        machinePanelInteract = Instantiate(machinePanelInteractPrefab, canvas.transform);
+        inventoryInteract = Instantiate(inventoryPanelInteractPrefab, canvas.transform);
+        inventoryPanel = Instantiate(inventoryPanelPrefab, canvas.transform);
+        craftingPanel = Instantiate(craftingPanelPrefab, canvas.transform);
+        inventoryAmmo = Instantiate(ammoInventoryPrefab, canvas.transform);
+        mouseInventoryUI = Instantiate(mouseInventoryPrefab, canvas.transform);
+        tooltip = Instantiate(tooltipPanelPrefab, canvas.transform);
+        filterItemPanel = Instantiate(filterItemPanelPrefab, canvas.transform);
+
+        mouseInventoryUI.GetComponent<InventoryMouse>().SetInventory(mouseInventory);
         machineUI = machinePanelInteract.GetComponentInChildren<MachineUI>();
         inventoryInteractUI = inventoryInteract.GetComponentInChildren<InventoryUI>();
         inventoryUI = inventoryPanel.GetComponentInChildren<InventoryUI>();
         craftingUI = craftingPanel.GetComponentInChildren<CraftingUI>();
         inventoryAmmoUI = inventoryAmmo.GetComponentInChildren<InventoryUI>();
         ammoSlotSelected = inventoryAmmo.GetComponentInChildren<HighlightSlotUI>();
+        filterItemUI = filterItemPanel.GetComponent<UIFilterItem>();
 
         inventoryAmmoUI.SetViewedInventory(ammoInventory);
         inventoryAmmoUI.SetMouseInventory(mouseInventory);
@@ -103,8 +128,8 @@ public class ObjectInteraction : MonoBehaviour
         machineUI.SetMouseInventory(mouseInventory);
 
 
-        
-        characterAlliance = new Alliance("Character");
+
+        characterAlliance = AllianceDefinitions.Instance.GetAlliance("Character");
         this.gameObject.GetComponent<Health>().alliance = characterAlliance.allianceCode;
     }
 
@@ -134,7 +159,7 @@ public class ObjectInteraction : MonoBehaviour
             placementRotation--;
             if(placementRotation < 0)
             {
-                placementRotation = 3;
+                placementRotation = 7;
             }
         }
 
@@ -159,33 +184,41 @@ public class ObjectInteraction : MonoBehaviour
                 }
                 else if (mouseInventory.inventoryReadOnly[0].item.placeableResult != null) //place building code
                 {
+                    Vector2 size;
+                    IRotate rotateable;
+                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out rotateable))
+                    {
+                        placeSpriteRenderer.sprite = rotateable.GetRotatedPlaceSprite(placementRotation);
+                        size = rotateable.GetRotatedBoundingBox(placementRotation);
+                    }
+                    else
+                    {
+                        placeSpriteRenderer.sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
+                        size = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<BoxCollider2D>().size;
+                    }
+
                     Vector3 place = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     Vector3 placeRounded = new Vector3(Mathf.Round(place.x), Mathf.Round(place.y), 0);
                     Vector3 placeVector = placeGrid.WorldToCell(placeRounded);
-                    Vector3 size = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<BoxCollider2D>().size;
-                    size = new Vector3(Mathf.Ceil(size.x), Mathf.Ceil(size.y));
+                    size = new Vector2(Mathf.CeilToInt(size.x), Mathf.CeilToInt(size.y));
                     Vector3 offset = new Vector3(0, 0);
-                    if (Mathf.Round(size.x) % 2 != 0)
+                    if (size.x % 2 != 0)
                     {
                         offset.x = 0.5f;
                     }
-                    if (Mathf.Round(size.y) % 2 != 0)
+                    if (size.y % 2 != 0)
                     {
                         offset.y = 0.5f;
                     }
 
                     placeSprite.transform.position = placeVector - offset;
-                    placeSpriteRenderer.sprite = mouseInventory.inventoryReadOnly[0].item.placeableResult.GetComponent<SpriteRenderer>().sprite;
-                    IRotate rotateable;
-                    if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out rotateable))
-                    {
-                        placeSpriteRenderer.sprite = rotateable.GetRotatedPlaceSprite(placementRotation);
-                    }
+                    
+                    
 
                     BuildingManager buildingManager;
 
 
-                    if (rotateable != null && Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders) == 0)
+                    if (rotateable != null && Physics2D.OverlapBox(placeVector - offset, size - new Vector2(0.1f, 0.1f), 0.0f, filter, colliders) == 0)
                     {
                         rotateable.GetRotatedPlaceSprite(placementRotation);
                         placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
@@ -196,13 +229,14 @@ public class ObjectInteraction : MonoBehaviour
                             building.GetComponent<IRotate>().InitializeRotated(placementRotation);
                             DestroyGrassAt(placeVector - offset, size);
                             mouseInventory.DecrementStack(0);
+                            UpdateLoaders(building.transform.position, size);
                         }
                     }
                     else if (mouseInventory.inventoryReadOnly[0].item.placeableResult.TryGetComponent(out buildingManager))
                     {
-                        Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filterMining, collidersList);
+                        Physics2D.OverlapBox(placeVector - offset, size - new Vector2(0.1f, 0.1f), 0.0f, filterMining, collidersList);
                         List<Mineable> mineables;
-                        if (buildingManager.CheckPlacement(collidersList, out mineables))
+                        if (buildingManager.CheckPlacement(collidersList, out mineables, placeVector - offset))
                         {
                             placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                             if (Input.GetMouseButton(0))
@@ -212,6 +246,7 @@ public class ObjectInteraction : MonoBehaviour
                                 building.GetComponent<Health>().alliance = characterAlliance.allianceCode;
                                 DestroyGrassAt(placeVector - offset, size);
                                 mouseInventory.DecrementStack(0);
+                                UpdateLoaders(building.transform.position, size);
                             }
                         }
                         else
@@ -219,7 +254,7 @@ public class ObjectInteraction : MonoBehaviour
                             placeSpriteRenderer.color = new Color(1, 0, 0, 0.25f);
                         }
                     }
-                    else if (Physics2D.OverlapBox(placeVector - offset, size / 2.0f, 0.0f, filter, colliders) == 0)
+                    else if (Physics2D.OverlapBox(placeVector - offset, size - new Vector2(0.1f, 0.1f), 0.0f, filter, colliders) == 0)
                     {
                         placeSpriteRenderer.color = new Color(0, 1, 0, 0.25f);
                         if (Input.GetMouseButton(0))
@@ -228,6 +263,7 @@ public class ObjectInteraction : MonoBehaviour
                             building.GetComponent<Health>().alliance = characterAlliance.allianceCode;
                             DestroyGrassAt(placeVector - offset, size);
                             mouseInventory.DecrementStack(0);
+                            UpdateLoaders(building.transform.position, size);
                         }
                     }
                     else
@@ -253,20 +289,30 @@ public class ObjectInteraction : MonoBehaviour
                     Inventory inventory = null;
                     CraftingManagerRecipe craftingManagerRecipe = null;
                     CraftingManagerFixed craftingManagerFixed = null;
+                    IItemFilter itemFilter = null;
                     if (hits[0].collider.gameObject.TryGetComponent<CraftingManagerRecipe>(out craftingManagerRecipe))
                     {
+                        filterItemUI.SetFilterFocus(null);
                         machineUI.SetLinkedMachine(hits[0].collider.gameObject);
                         inventoryInteractUI.SetViewedInventory(null);
                     }
                     else if (hits[0].collider.gameObject.TryGetComponent<CraftingManagerFixed>(out craftingManagerFixed))
                     {
+                        filterItemUI.SetFilterFocus(null);
                         machineUI.SetLinkedMachine(hits[0].collider.gameObject);
                         inventoryInteractUI.SetViewedInventory(null);
                     }
                     else if (hits[0].collider.gameObject.TryGetComponent<Inventory>(out inventory))
                     {
+                        filterItemUI.SetFilterFocus(null);
                         inventoryInteractUI.SetViewedInventory(inventory);
                         machineUI.SetLinkedMachine(null);
+                    }
+                    else if (hits[0].collider.gameObject.TryGetComponent<IItemFilter>(out itemFilter))
+                    {
+                        filterItemUI.SetFilterFocus(itemFilter);
+                        machineUI.SetLinkedMachine(null);
+                        inventoryInteractUI.SetViewedInventory(null);
                     }
                     else
                     {
@@ -320,6 +366,29 @@ public class ObjectInteraction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Position of new building
+    /// size of new building
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="size"></param>
+    void UpdateLoaders(Vector2 position, Vector2 size)
+    {
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useLayerMask = true;
+        filter.layerMask = 1 << LayerMask.NameToLayer("ConveyorBelt");
+        Collider2D[] elements = new Collider2D[(int)(size.x + size.x + size.y + size.y + 4)];//lol fuck if this works
+        int loaderCount = Physics2D.OverlapBox(position, size + new Vector2(1, 1), 0, filter, elements);
+        Loader temp;
+        for(int i = 0; i < loaderCount; i++)
+        {
+            if(elements[i].TryGetComponent(out temp))
+            {
+                temp.CheckForInventory();
+            }
+        }
+    }
+
     void FixedUpdate()
     {
         if (currentMineable != null)
@@ -351,11 +420,6 @@ public class ObjectInteraction : MonoBehaviour
             
         }
         fireWeapon = false;
-    }
-
-    public void SetPlaceGrid(Grid grid)
-    {
-        this.placeGrid = grid;
     }
 
     void DestroyGrassAt(Vector2 center, Vector2 size) 
@@ -395,6 +459,23 @@ public class ObjectInteraction : MonoBehaviour
         foreach (KeyValuePair<int, Item> item in Definitions.Instance.ItemDictionary)
         {
             playerInventory.InsertStack(new ItemStack(item.Value, item.Value.maxStack));
+        }
+    }
+
+    void OnDestroy()
+    {
+        Destroy(machinePanelInteract);
+        Destroy(inventoryInteract);
+        Destroy(inventoryPanel);
+        Destroy(craftingPanel);
+        Destroy(inventoryAmmo);
+        Destroy(mouseInventoryUI);
+        Destroy(tooltip);
+        Destroy(filterItemPanel);
+        if (respawnPanelPrefab != null && canvas != null)
+        {
+            GameObject respawnPanel = Instantiate(respawnPanelPrefab, canvas.transform, false);
+            respawnPanel.GetComponent<DeathPanelUI>().GiveAlliance(characterAlliance);
         }
     }
 

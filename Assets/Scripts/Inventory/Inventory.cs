@@ -281,6 +281,52 @@ public class Inventory : MonoBehaviour
         return itemStack;
     }
 
+    /// <summary>
+    /// Outputs a item entity from inventory
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    public virtual ItemEntity GetOutputItemEntity(Vector2 position, int filter)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i] != null && (filter == -1 || inventory[i].item.id == filter))
+            {
+                inventory[i].size--;
+                Item item = inventory[i].item;
+                if (inventory[i].size == 0)
+                {
+                    inventory[i] = null;
+                }
+                return ItemEntityPool.Instance.CreateItemEntity(position, item);
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Tries to insert a single item
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    public virtual bool TryInsertItem(Item item)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i] == null || (inventory[i].size < item.maxStack && inventory[i].item.id == item.id))
+            {
+                if (inventory[i] == null)
+                {
+                    inventory[i] = new ItemStack(item, 0);
+                }
+                inventory[i].size++;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void ChangeStackCount(int index, int newCount)
     {
         if(newCount == 0)

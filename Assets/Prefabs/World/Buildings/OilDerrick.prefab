@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8725183619835397048}
   - component: {fileID: 5253419194656922498}
   - component: {fileID: 76401131873447301}
+  - component: {fileID: -8561131272486820385}
   m_Layer: 8
   m_Name: OilDerrick
   m_TagString: Untagged
@@ -174,6 +175,20 @@ MonoBehaviour:
   miningtag: 
   values: 
   sprites: []
+--- !u!114 &-8561131272486820385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8725183619835397049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860ab6e325ea49b43bfcd585015eabc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  miningTag: oil
+  centeredOnMineable: 1
 --- !u!1001 &7797573997278356371
 PrefabInstance:
   m_ObjectHideFlags: 0

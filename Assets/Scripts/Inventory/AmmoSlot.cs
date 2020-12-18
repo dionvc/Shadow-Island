@@ -44,4 +44,13 @@ public class AmmoSlot : Inventory
         }
         return item;
     }
+
+    public override bool TryInsertItem(Item item)
+    {
+        if (item is ItemAmmo)
+        {
+            return base.TryInsertItem(item);
+        }
+        return false;
+    }
 }
