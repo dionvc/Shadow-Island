@@ -1,5 +1,8 @@
 # Shadow-Island
 
+Under about there is proper credits for any material used.  Otherwise the rest was authored by me.  Most art was drawn using the Piskel or Aesprite software.
+Some effects were rendered using blender.
+
 Controls:
 
 All controls except the debug controls are listed in the settings
