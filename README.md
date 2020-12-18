@@ -8,8 +8,8 @@ Press K to receive all items to your inventory
 
 Goal:
 
-Collect resources and build defenses to protect the beacon against enemies.
-
+Collect resources and build defenses to protect the beacon against enemies.  
+Build machinery like drills and assemblers to help with automating defense.
 
 Some Info:
 
@@ -24,6 +24,7 @@ Belt usage:
 ![alt text](https://github.com/dionvc/Shadow-Island/blob/main/beltusage.PNG?raw=true)
 
 Loaders can be placed next to machines and chests and will load or unload items
+
 Splitters will split items from both inputs to outputs by item
 
 Filter usage:
